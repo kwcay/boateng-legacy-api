@@ -1,6 +1,5 @@
 # Dora Boateng API
 
-## Backups
+# Deploying
 
-**TODO**
-
+`git push heroku`
