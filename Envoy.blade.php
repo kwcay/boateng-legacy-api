@@ -255,6 +255,22 @@
 
 @endtask
 
+@task('init', ['on' => 'production'])
+
+    # Check apps directory.
+    {{ msg('Checking apps directory...') }}
+    mkdir -p {{ $baseDir }};
+    mkdir -p {{ $releasesDir }};
+    
+    # Make sure the persistent storage directory exists.
+    mkdir -p {{ $baseDir }}/storage;
+    mkdir -p {{ $baseDir }}/storage/app;
+    mkdir -p {{ $baseDir }}/storage/framework/sessions;
+    mkdir -p {{ $baseDir }}/storage/framework/views;
+    mkdir -p {{ $baseDir }}/storage/logs;
+
+@endtask
+
 
 
 {{-- Local tasks --}}
@@ -287,7 +303,7 @@
 @task('test-local', ['on' => 'local'])
 
     {{ msg('Testing Envoy on localhost...') }}
-
+    
     ls
 
 @endtask
@@ -300,6 +316,6 @@
     ls
 
     {{ msg('Testing Git...') }}
-    cd {{ $liveDir }} && git status
+    ssh -T git@boateng-deployer
 
 @endtask
