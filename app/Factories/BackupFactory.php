@@ -12,8 +12,14 @@ use Exception;
 use Illuminate\Http\Request;
 use Symfony\Component\Yaml\Yaml;
 use Illuminate\Http\UploadedFile as File;
-use App\Factories\Factory as FactoryContract;
+use App\Factories\Contract as FactoryContract;
+use App\Factories\Backup\Helper as BackupHelper;
 
+/**
+ * TODO:    create restore flag to continue even if a model import fails,
+ *          (e.g. --force-continue). When false, backups should revert,
+ *          or at least abort unfinished.
+ */
 class BackupFactory extends FactoryContract
 {
     /**
@@ -41,10 +47,10 @@ class BackupFactory extends FactoryContract
     /**
      * @param Illuminate\Http\Request $request
      */
-    public function __construct(Request $request, DataImportFactory $importHelper)
+    public function __construct(Request $request, BackupHelper $helper)
     {
-        $this->request = $request;
-        $this->importHelper = $importHelper;
+        $this->request  = $request;
+        $this->helper   = $helper;
 
         $this->boot();
     }
@@ -65,7 +71,6 @@ class BackupFactory extends FactoryContract
      *
      * @param   Illuminate\Http\UploadedFile    $file
      * @return  App\Factories\BackupFactory
-     *
      * @throws Exception
      */
     public function upload(File $file)
@@ -168,7 +173,7 @@ class BackupFactory extends FactoryContract
         }
 
         // Restore backup.
-        $this->importHelper->setDataMeta($meta);
+        $this->helper->setDataMeta($meta);
         foreach ($this->resourceLimits as $resource => $limit) {
             // Performance check.
             if (! isset($meta[$resource]) || $meta[$resource]['files'] < 1) {
@@ -177,13 +182,21 @@ class BackupFactory extends FactoryContract
 
             $this->msg("Loading {$meta[$resource]['files']} {$resource} files...");
 
-            // Setup our DataImportFactory.
-            $this->importHelper->setDataModel('App\\Models\\'.ucfirst($resource));
+            try {
+                $backupHelper = $this->helper->getHelper($resource);
+            } catch (Exception $e) {
+                // TODO: handle resource not found.
 
+                $this->msg("Skipping {$resource}");
 
-            // Loop through each file and import data using the DataImportFactory.
+                continue;
+            }
+            // TODO: handle other errors
+
+            // Loop through each file and import data.
             for ($i = 0; $i < $meta[$resource]['files']; $i++) {
                 $dataFile = "{$restoreId}/{$resource}-{$i}.{$meta['format']}";
+
                 if (! $this->tempStorage->exists($dataFile)) {
                     continue;
                 }
@@ -194,7 +207,9 @@ class BackupFactory extends FactoryContract
 
                 // File checksum.
                 if (! isset($options['skipChecksum']) || ! $options['skipChecksum']) {
-                    if ($meta[$resource]['checksums'][$i] !== $this->checksum($data, $meta['checksum-method'])) {
+                    if ($meta[$resource]['checksums'][$i]
+                        !== $this->checksum($data, $meta['checksum-method'])
+                    ) {
                         $this->tempStorage->deleteDirectory($restoreId);
 
                         throw new Exception(
@@ -207,7 +222,7 @@ class BackupFactory extends FactoryContract
 
                 // Import data.
                 try {
-                    $results = $this->importHelper->importDataSet($data);
+                    $results = $backupHelper->restore($data);
 
                     foreach ($results->getMessages() as $msg) {
                         $this->msg("File #$i: {$msg}");

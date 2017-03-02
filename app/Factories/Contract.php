@@ -7,7 +7,7 @@ namespace App\Factories;
 /**
  * Factory contract.
  */
-abstract class Factory
+abstract class Contract
 {
     protected $isBooted = false;
 
