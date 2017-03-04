@@ -7,21 +7,6 @@ namespace App\Services\Backup;
 class Helper
 {
     /**
-     * Meta data.
-     *
-     * @var array
-     */
-    protected $metaData;
-
-    /**
-     * @param array $meta
-     */
-    public function setMetaData(array $meta)
-    {
-        $this->metaData = $meta;
-    }
-
-    /**
      *
      */
     public function getHelper($resourceName = null)
@@ -35,10 +20,13 @@ class Helper
         // Check class
         $className = 'App\\Models\\'.ucfirst($resourceName);
         if (! class_exists($className)) {
-            throw new Exception('Model doesn\t exist');
+            throw new Exception('Model doesn\'t exist');
         }
 
-        $helperName = 'App\\Factories\\Backup\\'.ucfirst($resourceName).'Helper';
+        $helperName = 'App\\Services\\Backup\\'.ucfirst($resourceName).'Helper';
+        if (! class_exists($helperName)) {
+            throw new Exception('Backup helper not implemented');
+        }
 
         return new $helperName;
     }

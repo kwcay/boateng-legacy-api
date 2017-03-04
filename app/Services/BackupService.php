@@ -173,7 +173,6 @@ class BackupService extends Contract
         }
 
         // Restore backup.
-        $this->helper->setMetaData($meta);
         foreach ($this->resourceLimits as $resource => $limit) {
             // Performance check.
             if (! isset($meta[$resource]) || $meta[$resource]['files'] < 1) {
@@ -286,31 +285,17 @@ class BackupService extends Contract
      * Retrieves the relative path of a backup file.
      *
      * @param   string  $filename
-     * @param   int     $timestamp
-     *
      * @throws  Exception
      */
-    public function getPath($filename, $timestamp = null)
+    public function getPath($filename)
     {
         $fullName = null;
 
-        // If a timestamp was provided, look for that specific backup.
-        if ($timestamp > 0) {
-            $fullName = date('Y-m', $timestamp).'/'.$filename;
+        $files = $this->storage->allFiles('/');
 
-            if (! $this->storage->exists($fullName)) {
-                throw new Exception('Timestamp-filename combination does not exist.');
-            }
-        }
-
-        // If none was provided, look for the latest backup matching the filename.
-        else {
-            $files = $this->storage->allFiles('/');
-
-            foreach ($files as $file) {
-                if (strpos($file, $filename) !== false) {
-                    $fullName = $file;
-                }
+        foreach ($files as $file) {
+            if (strpos($file, $filename) !== false) {
+                $fullName = $file;
             }
         }
 

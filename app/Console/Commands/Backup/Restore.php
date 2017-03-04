@@ -7,10 +7,13 @@ namespace App\Console\Commands\Backup;
 use Storage;
 use Exception;
 use Illuminate\Console\Command;
-use App\Factories\BackupFactory;
+use App\Services\BackupService;
+use App\Console\Traits\FileTrait;
 
 class Restore extends Command
 {
+    use FileTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -39,13 +42,13 @@ class Restore extends Command
      *
      * @return void
      */
-    // public function __construct(BackupFactory $factory)
-    // {
-    //     parent::__construct();
-    //
-    //     $this->factory = $factory;
-    //     $this->storage = Storage::disk('backups');
-    // }
+    public function __construct(BackupService $helper)
+    {
+        parent::__construct();
+
+        $this->helper   = $helper;
+        $this->storage  = Storage::disk('backups');
+    }
 
     /**
      * Execute the console command.
@@ -55,17 +58,7 @@ class Restore extends Command
     public function handle()
     {
         // Retrieve backup filename.
-        $filename = $this->argument('file');
-
-        if (empty($filename)) {
-            $files = array_reverse($this->storage->allFiles('/'));
-            $filename = $this->choice('Select a backup file to restore:', $files, 0);
-        }
-
-        // Performance check.
-        if (! $this->storage->exists($filename)) {
-            $this->error('Can\'t find backup file "'.$filename.'".');
-
+        if (! $filename = $this->getFilenameFromAgrs()) {
             return 0;
         }
 
@@ -77,7 +70,7 @@ class Restore extends Command
         // Restore backup file.
         $this->info('Reading backup file...');
         try {
-            $this->factory->restore($filename, [
+            $this->helper->restore($filename, [
                 'refresh-db' => ($this->option('refresh-db')),
             ]);
         } catch (Exception $e) {

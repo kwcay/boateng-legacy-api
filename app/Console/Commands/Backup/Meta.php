@@ -74,7 +74,7 @@ class Meta extends Command
 
         // Resource info
         $rows = [];
-        $headers = ['Resource', 'Count'];
+        $headers = ['Resource', 'File count'];
 
         foreach ($meta as $resourceName => $info) {
             if (! is_array($info) || ! isset($info['files']) || ! is_int($info['files'])) {
