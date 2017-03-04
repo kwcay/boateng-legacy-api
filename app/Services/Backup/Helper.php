@@ -4,6 +4,8 @@
  */
 namespace App\Services\Backup;
 
+use Exception;
+
 class Helper
 {
     /**

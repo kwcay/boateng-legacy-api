@@ -167,9 +167,16 @@ class BackupService extends Contract
         Phar::unlinkArchive($this->getDirName($restoreId).'/data.tar.gz');
 
         // Refresh database.
-        if (isset($options['refresh-db'])) {
+        if (true === $options['refresh-db']) {
             $this->msg('Refreshing migrations...');
-            Artisan::call('migrate:refresh', ['--force' => true]);
+
+            try {
+                Artisan::call('migrate:refresh', ['--force' => true]);
+            } catch (Exception $e) {
+                $this->tempStorage->deleteDirectory($restoreId);
+
+                throw new Exception($e->getMessage());
+            }
         }
 
         // Restore backup.
@@ -186,6 +193,7 @@ class BackupService extends Contract
             } catch (Exception $e) {
                 // TODO: handle resource not found.
 
+                $this->msg($e->getMessage());
                 $this->msg("Skipping {$resource}");
 
                 continue;
@@ -206,7 +214,7 @@ class BackupService extends Contract
 
                 // File checksum.
                 if (! isset($options['skipChecksum']) || ! $options['skipChecksum']) {
-                    if (! $this->integrityCheck($data, $meta[$resource]['checksums'][$i], $meta['checksum-method']))
+                    if (! $this->integrityCheck($data, $meta[$resource]['checksums'][$i], $meta['checksum-method'])) {
                         $this->tempStorage->deleteDirectory($restoreId);
 
                         throw new Exception(

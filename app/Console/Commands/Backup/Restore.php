@@ -71,14 +71,15 @@ class Restore extends Command
         $this->info('Reading backup file...');
         try {
             $this->helper->restore($filename, [
-                'refresh-db' => ($this->option('refresh-db')),
+                'refresh-db' => $this->option('refresh-db'),
             ]);
         } catch (Exception $e) {
             $this->error($e->getMessage());
+            $this->line('Aborting...');
 
             return 0;
         }
 
-        $this->info('The backup file "'.$filename.'" has been restored.');
+        return 1;
     }
 }
