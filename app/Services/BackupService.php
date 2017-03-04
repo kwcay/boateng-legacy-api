@@ -1,26 +1,26 @@
 <?php
 /**
- * Copyright Dora Boateng(TM) 2016, all rights reserved.
+ * Copyright Dora Boateng(TM) 2017, all rights reserved.
  */
-namespace App\Factories;
+namespace App\Services;
 
 use Phar;
 use Artisan;
 use Storage;
 use PharData;
 use Exception;
+use App\Services\Contract;
 use Illuminate\Http\Request;
 use Symfony\Component\Yaml\Yaml;
 use Illuminate\Http\UploadedFile as File;
-use App\Factories\Contract as FactoryContract;
-use App\Factories\Backup\Helper as BackupHelper;
+use App\Services\Backup\Helper as BackupHelper;
 
 /**
  * TODO:    create restore flag to continue even if a model import fails,
  *          (e.g. --force-continue). When false, backups should revert,
  *          or at least abort unfinished.
  */
-class BackupFactory extends FactoryContract
+class BackupService extends Contract
 {
     /**
      * Specifies the number of objects to store per file for each resource. When restoring a
@@ -173,7 +173,7 @@ class BackupFactory extends FactoryContract
         }
 
         // Restore backup.
-        $this->helper->setDataMeta($meta);
+        $this->helper->setMetaData($meta);
         foreach ($this->resourceLimits as $resource => $limit) {
             // Performance check.
             if (! isset($meta[$resource]) || $meta[$resource]['files'] < 1) {
