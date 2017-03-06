@@ -1,8 +1,16 @@
 <?php
-
+/**
+ * Copyright Dora Boateng(TM) 2016, all rights reserved.
+ */
 namespace App;
 
+use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use App\Traits\EmbedableTrait as Embedable;
+use App\Traits\ExportableTrait as Exportable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\ObfuscatableTrait as ObfuscatesID;
+use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable

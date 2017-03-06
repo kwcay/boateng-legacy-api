@@ -26,16 +26,25 @@ class BackupService extends Contract
      * Specifies the number of objects to store per file for each resource. When restoring a
      * backup file, resources will be loaded in the order specified here as well.
      *
+     * The following should be imported as relations:
+            - Areas
+     *      - Data *
+     *      - Media
+     *      - Tags
+     *      - Transliterations
+     *      * Somewhat complex, as they have hasMany relations
+     *
      * @var array
      */
     protected $resourceLimits = [
         'languageFamily'    => 1000,
         'reference'         => 1000,
         'alphabet'          => 500,
-        'language'          => 500,
-        'area'              => 200,
+        'language'          => 200,
+        'country'           => 1000,
         'culture'           => 500,
         'definition'        => 200,
+        'definitionTitle'   => 500,
         'user'              => 500,
     ];
 
