@@ -14,7 +14,7 @@ class AlphabetHelper extends Contract
      * Imports a data set into the database.
      *
      * @param   array $dataSet
-     * @return  App\Services\Backup\Contract
+     * @return  App\Services\Backup\AlphabetHelper
      */
     public function restore(array $dataSet = null)
     {

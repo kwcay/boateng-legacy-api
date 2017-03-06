@@ -37,15 +37,15 @@ class BackupService extends Contract
      * @var array
      */
     protected $resourceLimits = [
-        'languageFamily'    => 1000,
+        // 'languageFamily'    => 1000,
         'reference'         => 1000,
         'alphabet'          => 500,
-        'language'          => 200,
-        'country'           => 1000,
-        'culture'           => 500,
-        'definition'        => 200,
-        'definitionTitle'   => 500,
-        'user'              => 500,
+        // 'language'          => 200,
+        // 'country'           => 1000,
+        // 'culture'           => 500,
+        // 'definition'        => 200,
+        // 'definitionTitle'   => 500,
+        // 'user'              => 500,
     ];
 
     /**
