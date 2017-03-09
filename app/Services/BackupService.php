@@ -40,12 +40,12 @@ class BackupService extends Contract
         // 'languageFamily'    => 1000,
         'reference'         => 1000,
         'alphabet'          => 500,
-        // 'language'          => 200,
+        'language'          => 200,
         // 'country'           => 1000,
         // 'culture'           => 500,
-        // 'definition'        => 200,
+        'definition'        => 200,
         // 'definitionTitle'   => 500,
-        // 'user'              => 500,
+        'user'              => 500,
     ];
 
     /**

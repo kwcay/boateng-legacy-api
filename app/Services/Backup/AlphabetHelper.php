@@ -5,7 +5,6 @@
 namespace App\Services\Backup;
 
 use App\Models\Alphabet;
-use App\Models\Transliteration;
 use App\Services\Backup\Contract;
 
 class AlphabetHelper extends Contract

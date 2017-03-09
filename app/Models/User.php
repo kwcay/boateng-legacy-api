@@ -3,7 +3,7 @@
  * Copyright Dora Boateng(TM) 2016, all rights reserved.
  * TO REVIEW
  */
-namespace App;
+namespace App\Models;
 
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;

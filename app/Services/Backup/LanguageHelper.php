@@ -4,11 +4,10 @@
  */
 namespace App\Services\Backup;
 
-use App\Models\Alphabet;
 use App\Models\Language;
 use App\Services\Backup\Contract;
 
-class LanguageHelper extends DataImportFactory
+class LanguageHelper extends Contract
 {
     /**
      * Stores loaded alphabets.
