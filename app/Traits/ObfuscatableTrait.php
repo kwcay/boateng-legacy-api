@@ -18,7 +18,7 @@ trait ObfuscatableTrait
     /**
      * @var string
      */
-    protected $_id;
+    protected $obfuscatedId;
 
     /**
      * @return mixed
@@ -37,13 +37,11 @@ trait ObfuscatableTrait
      */
     public function getUniqueId()
     {
-        if (is_null($this->_id)) {
-            $this->obfuscatorId = $this->obfuscatorId ?: 3;
-            $this->_id = $this->id > 0 ?
-                static::getObfuscator()->encode($this->obfuscatorId, $this->id) : 0;
+        if (is_null($this->obfuscatedId)) {
+            $this->obfuscatedId = $this->id > 0 ? static::getObfuscator()->encode($this->id) : 0;
         }
 
-        return $this->_id;
+        return $this->obfuscatedId;
     }
 
     /**
@@ -62,33 +60,22 @@ trait ObfuscatableTrait
      */
     public static function encodeId($id)
     {
-        $obfuscatorId = (new static)->obfuscatorId;
-
-        return static::getObfuscator()->encode($obfuscatorId, $id);
+        return static::getObfuscator()->encode($id);
     }
 
     /**
      * Decodes an ID.
      *
      * @param int|string $encodedId
-     * @return int|null
+     * @return int
      */
     public static function decodeId($encodedId)
     {
-        $id = 0;
-
-        // Un-obfuscate ID
-        if (is_string($encodedId) && ! is_numeric($encodedId) && strlen($encodedId) >= 8) {
-            if ($decoded = static::getObfuscator()->decode($encodedId)) {
-                $id = $decoded[1];
-            } else {
-                $id = null;
-            }
-        } elseif (is_numeric($encodedId)) {
-            $id = (int) $encodedId;
+        if ($id = static::getObfuscator()->decode($encodedId)) {
+            return $id;
         }
 
-        return $id;
+        return 0;
     }
 
     /**
@@ -151,5 +138,25 @@ trait ObfuscatableTrait
         }
 
         return parent::findOrFail($id, $columns);
+    }
+
+    /**
+     * Destroy the models for the given IDs.
+     *
+     * @param  array|int  $ids
+     * @return int
+     */
+    public static function destroy($ids)
+    {
+        // Decode IDs
+        $ids = is_array($ids) ? $ids : func_get_args();
+
+        foreach ($ids as &$id) {
+            if ($newId = self::decodeId($id)) {
+                $id = $newId;
+            }
+        }
+
+        return parent::destroy($ids);
     }
 }

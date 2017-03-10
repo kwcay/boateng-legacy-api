@@ -68,19 +68,6 @@ class Culture extends Model
 
     //
     //
-    // Attributes for App\Traits\ObfuscatableTrait
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * @var int
-     */
-    public $obfuscatorId = 73;
-
-
-    //
-    //
     // Attributes for App\Traits\SearchableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,6 +106,8 @@ class Culture extends Model
      */
     protected $hidden = [
         'id',
+        'deletedAt',
+        'deleted_at',
     ];
 
     /**

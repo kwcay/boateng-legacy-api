@@ -182,19 +182,19 @@ class LanguageController extends BaseController
     private function getLanguage($id, array $embed = [])
     {
         // Performance check.
-        if (empty($id) || is_numeric($id) || ! is_string($id)) {
-            return;
+        if (empty($id) || ! is_string($id)) {
+            return null;
         }
 
         // Find language by code.
-        if (strlen($id) == 3 || strlen($id) == 7) {
+        if (Language::isValidCode($id)) {
             $lang = Language::findByCode($id, $embed);
         }
 
         // Or find language by ID.
         else {
             if (! $id = Language::decodeId($id)) {
-                return;
+                return null;
             }
 
             $lang = Language::with($embed)->find($id);

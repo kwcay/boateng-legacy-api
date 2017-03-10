@@ -49,18 +49,6 @@ class Tag extends Model
         'id',
     ];
 
-    //
-    //
-    // Attributes for App\Traits\ObfuscatableTrait
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * @var int
-     */
-    public $obfuscatorId = 29;
-
 
     //
     //
@@ -98,6 +86,8 @@ class Tag extends Model
     protected $hidden = [
         'id',
         'pivot',
+        'deletedAt',
+        'deleted_at',
     ];
 
     /**

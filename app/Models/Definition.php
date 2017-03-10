@@ -91,19 +91,6 @@ class Definition extends Model
 
     //
     //
-    // Attributes for App\Traits\ObfuscatableTrait
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * @var int
-     */
-    public $obfuscatorId = 77;
-
-
-    //
-    //
     // Attributes for App\Traits\SearchableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -243,6 +230,8 @@ class Definition extends Model
         'tags',
         'languages',
         'translations',
+        'deletedAt',
+        'deleted_at',
     ];
 
     /**

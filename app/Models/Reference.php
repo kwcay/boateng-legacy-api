@@ -51,18 +51,6 @@ class Reference extends Model
         'id',
     ];
 
-    //
-    //
-    // Attributes for App\Traits\ObfuscatableTrait
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * @var int
-     */
-    public $obfuscatorId = 27;
-
 
     //
     //
@@ -100,6 +88,7 @@ class Reference extends Model
     protected $hidden = [
         'id',
         'pivot',
+        'deleted_at',
     ];
 
     /**

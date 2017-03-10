@@ -53,19 +53,6 @@ class Alphabet extends Model
 
     //
     //
-    // Attributes used by App\Traits\ObfuscatableTrait
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * @var int
-     */
-    public $obfuscatorId = 92;
-
-
-    //
-    //
     // Attributes used by App\Traits\SearchableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +84,11 @@ class Alphabet extends Model
     /**
      * The attributes that should be hidden from the model's array form.
      */
-    protected $hidden = ['id'];
+    protected $hidden = [
+        'id',
+        'deletedAt',
+        'deleted_at',
+    ];
 
     /**
      * Attributes that should be mutated to dates.

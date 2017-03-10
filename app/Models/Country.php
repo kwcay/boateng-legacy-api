@@ -52,19 +52,6 @@ class Country extends Model
 
     //
     //
-    // Attributes used by App\Traits\ObfuscatableTrait
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * @var int
-     */
-    public $obfuscatorId = 11;
-
-
-    //
-    //
     // Attributes used by App\Traits\SearchableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,7 +87,11 @@ class Country extends Model
      *
      * @var array
      */
-    protected $hidden = ['id'];
+    protected $hidden = [
+        'id',
+        'deletedAt',
+        'deleted_at',
+    ];
 
     /**
      * Attributes that SHOULD be appended to the model's array form.

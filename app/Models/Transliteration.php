@@ -30,7 +30,12 @@ class Transliteration extends Model
     /**
      * The attributes that should be hidden for arrays.
      */
-    protected $hidden = ['id', 'created_at', 'updated_at', 'deleted_at'];
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
     /**
      * @var array   Attributes that should be mutated to dates.

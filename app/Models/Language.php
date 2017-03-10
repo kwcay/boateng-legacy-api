@@ -72,19 +72,6 @@ class Language extends Model
 
     //
     //
-    // Attributes used by App\Traits\ObfuscatableTrait
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * @var int
-     */
-    public $obfuscatorId = 34;
-
-
-    //
-    //
     // Attributes used by App\Traits\SearchableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,6 +113,7 @@ class Language extends Model
         'definitions',
         'pivot',
         'parent',
+        'deleted_at',
     ];
 
     /**
@@ -325,6 +313,21 @@ class Language extends Model
 
         // And will have the format "abc" or "abc-def"
         return preg_match('/^([a-z]{3}(-[a-z]{3})?)$/', $code) ? $code : null;
+    }
+
+    /**
+     * @param string $code
+     * @return bool
+     */
+    public static function isValidCode($code)
+    {
+        $sanitizedCode = self::sanitizeCode($code);
+
+        if ($code != $sanitizedCode) {
+            return false;
+        }
+
+        return (bool) preg_match('/^[a-z]{3}(-[a-z]{3})?$/i', $code);
     }
 
     //

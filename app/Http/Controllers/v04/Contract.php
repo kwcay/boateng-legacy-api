@@ -554,6 +554,8 @@ abstract class Contract extends Controller
      */
     protected function getModelInstance($id)
     {
+        // Un-obfuscate ID.
+        if (! $id || ! $id = Obfuscator)
         // If we already have an instance of the model, great.
         if (is_a($id, 'Illuminate\Database\Eloquent\Model')) {
             return $id;
