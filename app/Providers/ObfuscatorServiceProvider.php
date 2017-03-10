@@ -33,7 +33,8 @@ class ObfuscatorServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('Obfuscator', function ($app) {
-            return new \Hashids\Hashids('rlr6x9a/1=^B8vQg8!0n5w]-K`&$usKE', 8);
+            return new \Jenssegers\Optimus\Optimus(794923373, 757342309, 1069650690);
+            // return new \Hashids\Hashids('rlr6x9a/1=^B8vQg8!0n5w]-K`&$usKE', 8);
         });
     }
 
