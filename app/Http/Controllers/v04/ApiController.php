@@ -2,7 +2,7 @@
 /**
  * Copyright Dora Boateng(TM) 2017, all rights reserved.
  */
-namespace App\Http\Controllers\v04;
+namespace App\Http\Controllers\v0_4;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
