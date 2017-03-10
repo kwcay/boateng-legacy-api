@@ -10,6 +10,13 @@ use App\Services\Backup\Contract;
 class UserHelper extends Contract
 {
     /**
+     *
+     */
+    public function create() {
+        throw new \Exception('UserHelper::create not implemented.');
+    }
+
+    /**
      * Imports a data set into the database.
      *
      * @param   array $dataSet

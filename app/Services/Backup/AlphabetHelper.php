@@ -10,6 +10,13 @@ use App\Services\Backup\Contract;
 class AlphabetHelper extends Contract
 {
     /**
+     *
+     */
+    public function create() {
+        throw new \Exception('AlphabetHelper::create not implemented.');
+    }
+
+    /**
      * Imports a data set into the database.
      *
      * @param   array $dataSet

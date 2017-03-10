@@ -4,11 +4,13 @@
  */
 namespace App\Services\Backup;
 
+use App\Models\Tag;
 use App\Models\Language;
 use App\Models\Definition;
+use App\Models\Translation;
 use App\Services\Backup\Contract;
 
-class DefinitionHelper extends Conract
+class DefinitionHelper extends Contract
 {
     /**
      * Stores loaded languages.
@@ -23,6 +25,13 @@ class DefinitionHelper extends Conract
      * @var array
      */
     private $_tags = [];
+
+    /**
+     *
+     */
+    public function create() {
+        throw new \Exception('DefinitionHelper::create not implemented.');
+    }
 
     /**
      * Imports a data set into the database.

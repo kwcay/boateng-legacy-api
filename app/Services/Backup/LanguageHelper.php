@@ -4,6 +4,7 @@
  */
 namespace App\Services\Backup;
 
+use App\Models\Alphabet;
 use App\Models\Language;
 use App\Services\Backup\Contract;
 
@@ -13,6 +14,13 @@ class LanguageHelper extends Contract
      * Stores loaded alphabets.
      */
     private $_alphabets = [];
+
+    /**
+     *
+     */
+    public function create() {
+        throw new \Exception('LanguageHelper::create not implemented.');
+    }
 
     /**
      * Imports a data set into the database.

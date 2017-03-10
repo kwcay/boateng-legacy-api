@@ -10,6 +10,13 @@ use App\Services\Backup\Contract;
 class ReferenceHelper extends Contract
 {
     /**
+     *
+     */
+    public function create() {
+        throw new \Exception('ReferenceHelper::create not implemented.');
+    }
+
+    /**
      * Imports a data set into the database.
      *
      * @param   array $dataSet
