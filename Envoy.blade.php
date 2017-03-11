@@ -5,7 +5,7 @@
     (new \Dotenv\Dotenv(__DIR__, '.env'))->load();
 
     # Setup variables.
-    $repository     = 'git@boateng-deployer:doraboateng/api.git';
+    $repository     = 'git@deployer:doraboateng/api.git';
     $baseDir        = env('ENVOY_BASE_DIR', '/var/www/apps');
     $releasesDir    = "{$baseDir}/releases";
     $liveDir        = env('ENVOY_LIVE_DIR', '/var/www/live');
@@ -165,7 +165,7 @@
     rm -rf {{ $releasesDir }}/{{ $newReleaseName }}/storage;
     cd {{ $releasesDir }}/{{ $newReleaseName }};
     ln -nfs {{ $baseDir }}/storage storage;
-    chmod -Rf 1777 {{ $baseDir }}/storage;
+    chmod -R 1777 {{ $baseDir }}/storage;
 
     ln -nfs {{ $releasesDir }}/{{ $newReleaseName }} {{ $liveDir }};
     chgrp -h www-data {{ $liveDir }};
@@ -261,7 +261,7 @@
     {{ msg('Checking apps directory...') }}
     mkdir -p {{ $baseDir }};
     mkdir -p {{ $releasesDir }};
-    
+
     # Make sure the persistent storage directory exists.
     mkdir -p {{ $baseDir }}/storage;
     mkdir -p {{ $baseDir }}/storage/app;
@@ -300,10 +300,17 @@
 
 {{-- Testing Envoy --}}
 
+@story('test')
+
+    test-local
+    test-prod
+
+@endstory
+
 @task('test-local', ['on' => 'local'])
 
     {{ msg('Testing Envoy on localhost...') }}
-    
+
     ls
 
 @endtask
@@ -311,11 +318,6 @@
 @task('test-prod', ['on' => 'production'])
 
     {{ msg('Testing Envoy on production server...') }}
-
-    cd {{ $releasesDir }}
-    ls
-
-    {{ msg('Testing Git...') }}
-    ssh -T git@boateng-deployer
+    ssh -T git@deployer
 
 @endtask
