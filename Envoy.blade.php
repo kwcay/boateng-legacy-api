@@ -146,7 +146,7 @@
     # Update group owner and permissions
     chgrp -R www-data {{ $newReleaseName }};
     chmod -R ug+rwx {{ $newReleaseName }};
-    chmod -Rf 1777 {{ $newReleaseName }}/storage;
+    chmod -R-- 1777 {{ $newReleaseName }}/storage;
 
 @endtask
 
@@ -169,6 +169,24 @@
 
     ln -nfs {{ $releasesDir }}/{{ $newReleaseName }} {{ $liveDir }};
     chgrp -h www-data {{ $liveDir }};
+
+@endtask
+
+@task('optimize', ['on' => 'production'])
+
+    {{ msg('Optimizing...') }}
+
+    cd {{ $liveDir }};
+
+    # Optimize installation.
+    php artisan cache:clear;
+    php artisan clear-compiled;
+    php artisan optimize;
+    php artisan config:cache;
+    # php artisan route:cache;
+
+    # Clear the OPCache
+    # sudo service php5-fpm restart
 
 @endtask
 
@@ -207,24 +225,6 @@
 @task('up', ['on' => 'production'])
 
     cd {{ $liveDir }} && php artisan up;
-
-@endtask
-
-@task('optimize', ['on' => 'production'])
-
-    {{ msg('Optimizing...') }}
-
-    cd {{ $liveDir }};
-
-    # Optimize installation.
-    php artisan cache:clear;
-    php artisan clear-compiled;
-    php artisan optimize;
-    php artisan config:cache;
-    # php artisan route:cache;
-
-    # Clear the OPCache
-    # sudo service php5-fpm restart
 
 @endtask
 
