@@ -579,6 +579,50 @@ class Reference extends Model
     }
 
     /**
+     * APA-style citation
+     * http://pitt.libguides.com/c.php?g=12108&p=64730
+     *
+     * @return string
+     */
+    public function getApaCitationAttribute($citation = '')
+    {
+
+    }
+
+    /**
+     * Chicago-style citation
+     * http://pitt.libguides.com/c.php?g=12108&p=64732
+     *
+     * @return string
+     */
+    public function getChicagoCitationAttribute($citation = '')
+    {
+
+    }
+
+    /**
+     * IEEE-style citation
+     * http://pitt.libguides.com/c.php?g=12108&p=64732
+     *
+     * @return string
+     */
+    public function getIeeeCitationAttribute($citation = '')
+    {
+
+    }
+
+    /**
+     * MLA-style citation
+     * http://pitt.libguides.com/citationhelp/mla8thedition
+     *
+     * @return string
+     */
+    public function getMlaCitationAttribute($citation = '')
+    {
+
+    }
+
+    /**
      * Accessor for $this->typeName.
      *
      * @return string
