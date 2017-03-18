@@ -74,6 +74,23 @@ class DefinitionController extends BaseController
     }
 
     /**
+     * Returns a random definition
+     */
+    public function random($langCode = null)
+    {
+        // TODO: support languages ?
+
+        // TODO: move this to a global scope, applicable to any resource.
+        if (! $definition = Definition::embed(Request::get('embed'))->orderByRaw('RAND()')->first()) {
+            return response('Definition Not Found.', 404);
+        }
+
+        $definition->applyEmbedableAttributes(Request::get('embed'));
+
+        return $definition;
+    }
+
+    /**
      * Finds definitions matching a title (exact match).
      *
      * @param string $definitionType

@@ -14,6 +14,7 @@ Route::resource('cultures', 'CultureController', ['except' => ['create', 'edit']
 // Definition endpoints.
 Route::get('definitions/count', 'DefinitionController@count');
 Route::get('definitions/search/{query}', 'DefinitionController@search');
+Route::get('definitions/random/{lang?}', 'DefinitionController@random');
 Route::resource('definitions', 'DefinitionController', ['except' => ['create', 'edit']]);
 Route::options('definition/{id?}', 'ApiController@options');
 
