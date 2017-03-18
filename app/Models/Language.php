@@ -395,10 +395,11 @@ class Language extends Model
 
         if ($definition = $this->definitions()->first()) {
             $first = [
-                'mainTitle' => $definition->titles[0]->title,
-                'translation' => $definition->translation,
-                'type' => $definition->type,
-                'subType' => $definition->subType,
+                'mainTitle'         => $definition->titles[0]->title,
+                'translationData'   => $definition->translationData,
+                'type'              => $definition->type,
+                'subType'           => $definition->subType,
+                'uniqueId'          => $definition->uniqueId,
             ];
         }
 
@@ -416,10 +417,11 @@ class Language extends Model
 
         if ($definition = $this->definitions()->orderBy('created_at', 'DESC')->first()) {
             $latest = [
-                'mainTitle' => $definition->titles[0]->title,
-                'translation' => $definition->translation,
-                'type' => $definition->type,
-                'subType' => $definition->subType,
+                'mainTitle'         => $definition->titles[0]->title,
+                'translationData'   => $definition->translationData,
+                'type'              => $definition->type,
+                'subType'           => $definition->subType,
+                'uniqueId'          => $definition->uniqueId,
             ];
         }
 
