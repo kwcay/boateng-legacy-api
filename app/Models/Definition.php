@@ -28,7 +28,7 @@ class Definition extends Model
 
     //
     //
-    // Attributes for Frnkly\Traits\Embedable
+    // Attributes for App\Traits\EmbedableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -278,6 +278,7 @@ class Definition extends Model
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
+
     /**
      * Defines relation to Translation model.
      *
@@ -326,25 +327,10 @@ class Definition extends Model
 
     //
     //
-    // Main methods
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-
-        // Markdown parser.
-        // $this->markdown = new MarkdownExtra;
-        // $this->markdown->html5 = true;
-    }
-
-    //
-    //
     // Helper methods
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Creates an instance of a definition type.
@@ -484,11 +470,13 @@ class Definition extends Model
         return $query->with('languages', 'translations', 'titles')->orderByRaw('RAND()')->first();
     }
 
+
     //
     //
     // Methods for App\Traits\SearchableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * @param string $term      Search query.
@@ -613,11 +601,13 @@ class Definition extends Model
         $definition->setAttribute('mainLanguage', $definition->mainLanguage);
     }
 
+
     //
     //
     // Translations-related methods.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Retrieves a translation relation.
@@ -749,11 +739,13 @@ class Definition extends Model
         return $this->_setTranslationAttribute($lang, 'meaning', $meaning);
     }
 
+
     //
     //
     // Accessors and mutators.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Accessor for $this->mainLanguage.
@@ -1135,11 +1127,13 @@ class Definition extends Model
         return 'definition';
     }
 
+
     //
     //
     // Import/export-related methods.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     public function setRelationToBeImported($relation, $data)
     {

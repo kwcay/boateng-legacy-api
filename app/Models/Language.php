@@ -22,7 +22,7 @@ class Language extends Model
 
     //
     //
-    // Attributes for Frnkly\Traits\Embedable
+    // Attributes for App\Traits\EmbedableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +33,7 @@ class Language extends Model
      */
     public $embedable = [
         'parentName'        => ['parent'],
-        'definitionsCount'  => ['definitions'],
+        'definitionCount'   => ['definitions'],
         'firstDefinition'   => ['definitions'],
         'latestDefinition'  => ['definitions'],
         'randomDefinition'  => ['definitions'],
@@ -66,8 +66,7 @@ class Language extends Model
      *
      * @var array
      */
-    protected $appendsOnExport = [
-    ];
+    protected $appendsOnExport = [];
 
 
     //
@@ -133,7 +132,7 @@ class Language extends Model
      */
     public static $appendable = [
         'parentName',
-        'definitionsCount',
+        'definitionCount',
         'firstDefinition',
         'latestDefinition',
         'randomDefinition',
@@ -238,25 +237,13 @@ class Language extends Model
         return $this->belongsToMany('App\Models\Country', 'country_language', 'language_id', 'country_id');
     }
 
-    //
-    //
-    // Main methods
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * @param array $attributes
-     */
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-    }
 
     //
     //
     // Helper methods
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Looks up a language model by code.
@@ -292,6 +279,9 @@ class Language extends Model
         return $code ? static::where('code', $code)->exists() : false;
     }
 
+    /**
+     *
+     */
     public static function sortedBy($sort = 'name', $dir = 'asc')
     {
         return static::query()->orderBy($sort, $dir)->get();
@@ -330,11 +320,13 @@ class Language extends Model
         return (bool) preg_match('/^[a-z]{3}(-[a-z]{3})?$/i', $code);
     }
 
+
     //
     //
     // Accessors and mutators.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Accessor for $this->parentName.
@@ -445,10 +437,11 @@ class Language extends Model
 
         if ($definition = $this->definitions()->orderByRaw('RAND()')->first()) {
             $random = [
-                'mainTitle' => $definition->titles[0]->title,
-                'translation' => $definition->translation,
-                'type' => $definition->type,
-                'subType' => $definition->subType,
+                'mainTitle'         => $definition->titles[0]->title,
+                'translationData'   => $definition->translationData,
+                'type'              => $definition->type,
+                'subType'           => $definition->subType,
+                'uniqueId'          => $definition->uniqueId,
             ];
         }
 
@@ -465,11 +458,13 @@ class Language extends Model
         return 'language';
     }
 
+
     //
     //
     // Methods used by App\Traits\SearchableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * @param string $term      Search query.
