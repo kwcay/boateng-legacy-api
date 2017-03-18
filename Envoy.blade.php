@@ -146,7 +146,7 @@
     # Update group owner and permissions
     chgrp -R www-data {{ $newReleaseName }};
     chmod -R ug+rwx {{ $newReleaseName }};
-    chmod -R-- 1777 {{ $newReleaseName }}/storage;
+    chmod -R 1777 {{ $newReleaseName }}/storage;
 
 @endtask
 
@@ -165,7 +165,7 @@
     rm -rf {{ $releasesDir }}/{{ $newReleaseName }}/storage;
     cd {{ $releasesDir }}/{{ $newReleaseName }};
     ln -nfs {{ $baseDir }}/storage storage;
-    chmod -R 1777 {{ $baseDir }}/storage;
+    # chmod -R 1777 {{ $baseDir }}/storage;
 
     ln -nfs {{ $releasesDir }}/{{ $newReleaseName }} {{ $liveDir }};
     chgrp -h www-data {{ $liveDir }};
