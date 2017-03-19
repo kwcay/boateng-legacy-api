@@ -597,7 +597,7 @@ class Definition extends Model
 
         // Embeds.
         $definition->setAttribute('mainTitle', $definition->mainTitle);
-        $definition->setAttribute('translation', $definition->translation);
+        $definition->setAttribute('translationData', $definition->translationData);
         $definition->setAttribute('mainLanguage', $definition->mainLanguage);
     }
 
