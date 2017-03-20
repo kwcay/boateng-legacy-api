@@ -168,7 +168,9 @@ abstract class Contract extends Controller
         ];
 
         // Perform search.
-        return $model->search($query, $options);
+        return [
+            'results' => $model->search($query, $options)
+        ];
     }
 
     /**
