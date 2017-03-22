@@ -140,13 +140,15 @@ class DefinitionController extends BaseController
      */
     public function getDaily($type = null)
     {
-        // Performance check.
-        if (! $type = Definition::isValidType($type)) {
+        // Get type constant.
+        $type = Definition::getTypeConstant($type);
+
+        if (! is_int($type)) {
             return response('Invalid Definition Type.', 400);
         }
 
-        $langCode   = $this->request->get('lang', '*');
-        $embedStr   = $this->request->get('embed', '');
+        $langCode = $this->request->get('lang', '*');
+        $embedStr = $this->request->get('embed', '');
 
         switch ($type) {
             case Definition::TYPE_WORD:

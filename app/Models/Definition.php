@@ -402,7 +402,7 @@ class Definition extends Model
                 return static::TYPE_STORY;
         }
 
-        return $default ?: static::TYPE_WORD;
+        return $default;
     }
 
     /**
