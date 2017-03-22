@@ -47,17 +47,12 @@ class Expression extends Definition
      * Retrieves expression of the day.
      *
      * @param string $lang
-     * @return App\Models\Definition
+     * @param string $relations
+     * @return App\Models\Definition|null
      */
-    public static function daily($lang = 'all')
+    public static function daily($lang = '*', $embed = '')
     {
-        $cacheKey = 'definitions.expression.daily.'.$lang;
-
-        $expires = Carbon::now()->addDay();
-
-        return Cache::remember($cacheKey, $expires, function () use ($lang) {
-            return Expression::random($lang);
-        });
+        return static::dailyByType(static::TYPE_EXPRESSION, $lang, $embed);
     }
 
     /**

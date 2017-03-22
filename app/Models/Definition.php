@@ -5,6 +5,8 @@
 namespace App\Models;
 
 use DB;
+use Cache;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 // use cebe\markdown\MarkdownExtra;
 use App\Models\Definitions\Poem;
@@ -131,10 +133,10 @@ class Definition extends Model
      * Definition types.
      */
     public $types = [
-        0 => 'word',
-        5 => 'name',
-        10 => 'expression',
-        30 => 'story',
+        self::TYPE_WORD         => 'word',
+        self::TYPE_NAME         => 'name',
+        self::TYPE_EXPRESSION   => 'expression',
+        self::TYPE_STORY        => 'story',
     ];
 
     /**
@@ -142,7 +144,7 @@ class Definition extends Model
      */
     public $subTypes = [
 
-        0 => [
+        self::TYPE_WORD => [
             // Parts of speech.
             // See: http://www.edb.utexas.edu/minliu/pbl/ESOL/help/libry/speech.htm
             // See: http://www.aims.edu/student/online-writing-lab/grammar/parts-of-speech
@@ -162,21 +164,21 @@ class Definition extends Model
         ],
 
         // Types of proper names.
-        5 => [
+        self::TYPE_NAME => [
             'person'    => 'person',
             'place'     => 'place',
             'name'      => 'other proper name',
         ],
 
         // Types of phrases.
-        10 => [
+        self::TYPE_EXPRESSION => [
             'expression' => 'common expression',
             'phrase'    => 'simple phrase',
             'proverb'   => 'proverb or saying',
         ],
 
         // Types of stories
-        30 => [
+        self::TYPE_STORY => [
             'poem'  => 'poem',
             'story'  => 'short story',
             'song'  => 'song',
@@ -187,10 +189,10 @@ class Definition extends Model
      * Defaults for definition sub types.
      */
     public $defaultSubTypes = [
-        0 => 'n',
-        5 => 'name',
-        10 => 'expression',
-        30 => 'story',
+        self::TYPE_WORD         => 'n',
+        self::TYPE_NAME         => 'name',
+        self::TYPE_EXPRESSION   => 'expression',
+        self::TYPE_STORY        => 'story',
     ];
 
     /**
@@ -252,6 +254,7 @@ class Definition extends Model
         'relatedDefinitionList',
         'tagList',
         'translation',
+        'translationData',
         'mainLanguage',
         'languageList',
     ];
@@ -383,10 +386,10 @@ class Definition extends Model
     /**
      * Returns the constant value of a definition type.
      *
-     * @param string $typeName
+     * @param string $type
      * @return int
      */
-    public static function getTypeConstant($type, $default = 0)
+    public static function getTypeConstant($type, $default = null)
     {
         switch (strtolower(trim($type))) {
             case 'word':
@@ -399,7 +402,7 @@ class Definition extends Model
                 return static::TYPE_STORY;
         }
 
-        return $default;
+        return $default ?: static::TYPE_WORD;
     }
 
     /**
@@ -421,6 +424,8 @@ class Definition extends Model
         elseif (in_array($type, $types)) {
             return static::getTypeConstant($type);
         }
+
+        return null;
     }
 
     /**
@@ -468,6 +473,47 @@ class Definition extends Model
 
         // Return a random definition.
         return $query->with('languages', 'translations', 'titles')->orderByRaw('RAND()')->first();
+    }
+
+    /**
+     * Retrieves definition of the day.
+     *
+     * @param int       $type
+     * @param string    $lang
+     * @param string    $relations
+     * @return App\Models\Definition
+     */
+    public static function dailyByType($type, $lang = '*', $embed = '')
+    {
+        $type = static::isValidType($type);
+
+        // TODO: throw error.
+        if (! is_int($type)) {
+            return null;
+        }
+
+        // Cache the ID, and let it expire at midnight UTC every day.
+        $cacheKey   = "definitions.$type.daily.$lang";
+        $expires    = Carbon::now()->diffInMinutes(Carbon::tomorrow());
+
+        $id = Cache::remember($cacheKey, $expires, function () use ($lang, $type) {
+            $lang = Language::findByCode($lang);
+
+            // Get query builder.
+            $builder = $lang instanceof Language ? $lang->definitions() : static::query();
+
+            // Return a random definition.
+            return $builder
+                ->where('type', $type)
+                ->orderByRaw('RAND()')
+                ->value('id');
+        });
+
+        if (! $id) {
+            return null;
+        }
+
+        return static::embed($embed)->find($id);
     }
 
 
@@ -783,11 +829,13 @@ class Definition extends Model
      */
     public function getTypeAttribute($type = 0)
     {
-        return Arr::get($this->types, $type, $this->types[0]);
+        return Arr::get($this->types, $type, $this->types[static::TYPE_WORD]);
     }
 
     /**
      * Mutator for $this->type.
+     *
+     * @todo    Review logic...
      *
      * @param string|int $type
      * @return void

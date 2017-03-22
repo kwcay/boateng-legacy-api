@@ -141,38 +141,32 @@ class DefinitionController extends BaseController
     public function getDaily($type = null)
     {
         // Performance check.
-        $type = Definition::isValidType($type);
-        if (is_null($type)) {
+        if (! $type = Definition::isValidType($type)) {
             return response('Invalid Definition Type.', 400);
         }
 
-        // List of relations and attributes to append to results.
-        $embed = $this->getEmbedArray(
-            Request::get('embed'),
-            Definition::$appendable
-        );
+        $langCode   = $this->request->get('lang', '*');
+        $embedStr   = $this->request->get('embed', '');
 
         switch ($type) {
             case Definition::TYPE_WORD:
-                $daily = Word::daily($this->getParam('lang'));
+                $daily = Word::daily($langCode, $embedStr);
                 break;
 
             case Definition::TYPE_EXPRESSION:
-                $daily = Expression::daily($this->getParam('lang'));
+                $daily = Expression::daily($langCode, $embedStr);
                 break;
 
             default:
-                $daily = Definition::random($this->getParam('lang'), $embed['relations']);
+                return response('Definition Type Unsupported.', 501);
+        }
+
+        if (! $daily) {
+            return response('No Results Found.');
         }
 
         // Append extra attributes.
-        if (count($embed['attributes'])) {
-            foreach ($embed['attributes'] as $accessor) {
-                $daily->setAttribute($accessor, $daily->$accessor);
-            }
-        }
-
-        return $daily;
+        return $daily->applyEmbedableAttributes($embedStr);
     }
 
     /**

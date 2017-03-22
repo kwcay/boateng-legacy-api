@@ -504,6 +504,7 @@ abstract class Contract extends Controller
     /**
      * Retrieves a parameter from the request, or the session.
      *
+     * @deprecated This is a RESTful API, no state should be assumed
      * @param string $key
      * @param mixed $default
      * @return mixed

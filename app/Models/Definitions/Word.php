@@ -2,8 +2,6 @@
 
 namespace App\Models\Definitions;
 
-use Cache;
-use Carbon\Carbon;
 use App\Models\Language;
 use App\Models\Definition;
 
@@ -20,7 +18,7 @@ class Word extends Definition
     /**
      * Retrieves a random word.
      *
-     * @param App\Models\Language $lang
+     * @param App\Models\Language|string $lang
      * @param array $relations
      * @return mixed
      */
@@ -45,17 +43,12 @@ class Word extends Definition
      * Retrieves word of the day.
      *
      * @param string $lang
-     * @return App\Models\Definition
+     * @param string $relations
+     * @return App\Models\Definition|null
      */
-    public static function daily($lang = 'all')
+    public static function daily($lang = '*', $embed = '')
     {
-        $cacheKey = 'definitions.word.daily.'.$lang;
-
-        $expires = Carbon::now()->addDay();
-
-        return Cache::remember($cacheKey, $expires, function () use ($lang) {
-            return Word::random($lang);
-        });
+        return static::dailyByType(static::TYPE_WORD, $lang, $embed);
     }
 
     /**
