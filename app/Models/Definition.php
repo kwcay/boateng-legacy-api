@@ -387,7 +387,7 @@ class Definition extends Model
      * Returns the constant value of a definition type.
      *
      * @param string $type
-     * @return int
+     * @return int|mixed
      */
     public static function getTypeConstant($type, $default = null)
     {
@@ -400,6 +400,41 @@ class Definition extends Model
 
             case 'story':
                 return static::TYPE_STORY;
+        }
+
+        return $default;
+    }
+
+    /**
+     * Returns the constant value of a definition sub-type.
+     *
+     * @param int|string $type  Type name or type constant
+     * @param string $subType   Sub-type name or sub-type constant
+     * @return string|mixed     Sub-type constant or $default
+     */
+    public static function getSubTypeConstant($type, $subType, $default = null)
+    {
+        $d = new static;
+
+        // Make sure we have a type constant.
+        if (! is_numeric($type)) {
+            $type = static::getTypeConstant($type);
+        }
+
+        if (! isset($d->types[$type])) {
+            return $default;
+        }
+
+        // Check sub-type keys.
+        $subType = strtolower(trim($subType));
+        if (isset($d->subTypes[$type][$subType])) {
+            return $subType;
+        }
+
+        // Check sub-type values.
+        $values = array_flip($d->subTypes[$type]);
+        if (isset($values[$subType])) {
+            return $values[$subType];
         }
 
         return $default;
@@ -483,24 +518,27 @@ class Definition extends Model
      * @param string    $relations
      * @return App\Models\Definition
      */
-    public static function dailyByType($type, $lang = '*', $embed = '')
+    public static function dailyByType($type, $lang = '*', $embed = '', $subType = '')
     {
-        $type = static::isValidType($type);
-
         // TODO: throw error.
-        if (! is_int($type)) {
+        if (! is_int($type) || ! static::isValidType($type)) {
             return null;
         }
 
         // Cache the ID, and let it expire at midnight UTC every day.
-        $cacheKey   = "definitions.$type.daily.$lang";
+        $subType    = static::getSubTypeConstant($type, $subType);
+        $cacheKey   = 'definitions.'.$type.'.'.($subType ? $subType : '-').'.daily.'.$lang;
         $expires    = Carbon::now()->diffInMinutes(Carbon::tomorrow());
 
-        $id = Cache::remember($cacheKey, $expires, function () use ($lang, $type) {
+        $id = Cache::remember($cacheKey, $expires, function () use ($lang, $type, $subType) {
             $lang = Language::findByCode($lang);
 
             // Get query builder.
             $builder = $lang instanceof Language ? $lang->definitions() : static::query();
+
+            if ($subType) {
+                $builder->where('sub_type', $subType);
+            }
 
             // Return a random definition.
             return $builder

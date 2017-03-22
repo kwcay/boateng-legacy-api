@@ -52,7 +52,7 @@ class Expression extends Definition
      */
     public static function daily($lang = '*', $embed = '')
     {
-        return static::dailyByType(static::TYPE_EXPRESSION, $lang, $embed);
+        return static::dailyByType(static::TYPE_EXPRESSION, $lang, $embed, 'proverb');
     }
 
     /**
