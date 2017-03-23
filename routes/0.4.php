@@ -37,3 +37,4 @@ Route::resource('tags', 'TagController', ['except' => ['create', 'edit']]);
 
 // General lookup
 Route::get('search/{query}', 'ApiController@generalSearch');
+Route::get('latest', 'ApiController@latest');

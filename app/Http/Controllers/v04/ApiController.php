@@ -16,7 +16,7 @@ class ApiController extends Controller
     {
         $this->request = $request;
     }
-    
+
     /**
      * Returns the version number of the API.
      */
@@ -26,7 +26,7 @@ class ApiController extends Controller
     }
 
     /**
-     *
+     * @param string $query
      */
     public function generalSearch($query)
     {
@@ -59,5 +59,25 @@ class ApiController extends Controller
                 $this->request->input('limit', $limit)
             )
         ];
+    }
+
+    /**
+     * Returns the latest resource IDs and types
+     */
+    public function latest()
+    {
+        $results = new Collection;
+
+        // Latest definitions
+        $results = $results->merge(
+            Definition::select('id')->orderBy('created_at')->take(100)->get()
+        );
+
+        // Latest languages
+        $results = $results->merge(
+            Language::select('id', 'code')->orderBy('created_at')->take(20)->get()
+        );
+
+        return $results;
     }
 }
