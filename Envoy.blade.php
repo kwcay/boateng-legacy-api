@@ -5,26 +5,16 @@
     (new \Dotenv\Dotenv(__DIR__, '.env'))->load();
 
     # Setup variables.
-    $repository     = 'git@deployer:doraboateng/api.git';
-    $baseDir        = env('ENVOY_BASE_DIR', '/var/www/apps');
-    $releasesDir    = "{$baseDir}/releases";
-    $liveDir        = env('ENVOY_LIVE_DIR', '/var/www/live');
-    $newReleaseName = date('Ymd-His');
-    $localDir       = dirname(__FILE__);
+    $repository         = 'git@deployer:doraboateng/api.git';
+    $baseDir            = env('ENVOY_BASE_DIR', '/var/www/apps');
+    $releasesDir        = "{$baseDir}/releases";
+    $liveDir            = env('ENVOY_LIVE_DIR', '/var/www/live');
+    $newReleaseName     = date('Ymd-His');
+    $localDir           = dirname(__FILE__);
 
     $productionServer   = env('ENVOY_PRODUCTION', '127.0.0.1');
     $localServer        = env('ENVOY_LOCAL', '127.0.0.1');
 
-    /**
-     * Logs a message to the console.
-     * Credits: ?
-     *
-     * @param string $message
-     * @return string
-     */
-    function msg($message) {
-        return "echo '\033[32m" . $message . "\033[0m';\n";
-    }
 @endsetup
 
 
@@ -43,8 +33,12 @@
 
 
 
-@story('deploy', ['on' => 'production'])
+{{-- Deployment pipeline --}}
 
+@story('deploy')
+
+    test-code
+    test-git
     git-clone
     setup-app
     composer-install
@@ -76,9 +70,31 @@
 
 @endtask
 
-@task('git-clone')
 
-    {{ msg('Cloning git repository...') }}
+
+@task('test-code', ['on' => 'local'])
+
+    {{ App\Utilities\Cli::lightBlue('Running unit tests...') }}
+    {{ App\Utilities\Cli::lightGray('TODO') }}
+    {{ App\Utilities\Cli::lightGreen('Unit tests passed !') }}
+
+    {{ App\Utilities\Cli::lightBlue('Running integration tests...') }}
+    {{ App\Utilities\Cli::lightGray('TODO') }}
+    {{ App\Utilities\Cli::lightGreen('Integration tests passed !') }}
+
+@endtask
+
+@task('test-git', ['on' => 'production'])
+
+    {{ App\Utilities\Cli::yellow('Testing Git...') }}
+    ssh -T git@deployer
+    {{ App\Utilities\Cli::lightGreen('Git is good to go.') }}
+
+@endtask
+
+@task('git-clone', ['on' => 'production'])
+
+    {{ App\Utilities\Cli::yellow('Cloning git repository...') }}
 
     # Check if the release directory exists. If it doesn't, create one.
     [ -d {{ $releasesDir }} ] || mkdir -p {{ $releasesDir }};
@@ -90,17 +106,17 @@
     git clone --depth 1 {{ $repository }} {{ $newReleaseName }}  &> /dev/null;
 
     # Configure sparse checkout.
-    cd {{ $newReleaseName }};
-    git config core.sparsecheckout true;
-    echo "*" > .git/info/sparse-checkout;
-    echo "!storage" >> .git/info/sparse-checkout;
-    git read-tree -mu HEAD;
+    #cd {{ $newReleaseName }};
+    #git config core.sparsecheckout true;
+    #echo "*" > .git/info/sparse-checkout;
+    #echo "!storage" >> .git/info/sparse-checkout;
+    #git read-tree -mu HEAD;
 
 @endtask
 
-@task('setup-app')
+@task('setup-app', ['on' => 'production'])
 
-    {{ msg('Setting up app...') }}
+    {{ App\Utilities\Cli::yellow('Creating environment file...') }}
 
     # cd into new folder.
     cd {{ $releasesDir }}/{{ $newReleaseName }};
@@ -110,35 +126,22 @@
 
 @endtask
 
-@task('composer-install')
+@task('composer-install', ['on' => 'production'])
 
-    {{ msg('Installing composer dependencies...') }}
+    {{ App\Utilities\Cli::yellow('Installing composer dependencies...') }}
 
     # cd into new folder.
     cd {{ $releasesDir }}/{{ $newReleaseName }};
 
     # Install composer dependencies.
     composer self-update &> /dev/null;
-    composer install --prefer-dist --no-scripts --no-dev -q -o &> /dev/null;
+    composer install --prefer-dist --no-scripts --no-dev -q -o;
 
 @endtask
 
-@task('composer-update')
+@task('update-permissions', ['on' => 'production'])
 
-    {{ msg('Updating composer dependencies...') }}
-
-    # cd into live folder.
-    cd {{ $liveDir }};
-
-    # Update composer dependencies.
-    composer self-update &> /dev/null;
-    composer update --prefer-dist --no-scripts --no-dev -q -o &> /dev/null;
-
-@endtask
-
-@task('update-permissions')
-
-    {{ msg('Updating directory owner and permissions...') }}
+    {{ App\Utilities\Cli::yellow('Updating directory owner and permissions...') }}
 
     # cd into releases folder
     cd {{ $releasesDir }};
@@ -150,9 +153,9 @@
 
 @endtask
 
-@task('update-symlinks')
+@task('update-symlinks', ['on' => 'production'])
 
-    {{ msg('Updating symbolic links...') }}
+    {{ App\Utilities\Cli::yellow('Updating symbolic links...') }}
 
     # Make sure the persistent storage directory exists.
     #[ -d {{ $baseDir }}/storage ] || mkdir -p {{ $baseDir }}/storage;
@@ -174,7 +177,7 @@
 
 @task('optimize', ['on' => 'production'])
 
-    {{ msg('Optimizing...') }}
+    {{ App\Utilities\Cli::yellow('Optimizing...') }}
 
     cd {{ $liveDir }};
 
@@ -192,7 +195,7 @@
 
 @task('down', ['on' => 'production'])
 
-    {{ msg('Putting app in maintenance mode...') }}
+    {{ App\Utilities\Cli::yellow('Putting app in maintenance mode...') }}
 
     cd {{ $liveDir }} && php artisan down;
 
@@ -200,7 +203,7 @@
 
 @task('migrate', ['on' => 'production'])
 
-    {{ msg('Running migrations...') }}
+    {{ App\Utilities\Cli::yellow('Running migrations...') }}
 
     cd {{ $liveDir }} && php artisan migrate --force;
 
@@ -208,7 +211,7 @@
 
 @task('rollback', ['on' => 'production'])
 
-    {{ msg('Rolling back last migration...') }}
+    {{ App\Utilities\Cli::yellow('Rolling back last migration...') }}
 
     cd {{ $liveDir }} && php artisan migrate:rollback --force;
 
@@ -216,7 +219,7 @@
 
 @task('refresh', ['on' => 'production'])
 
-    {{ msg('Refreshing database migrations...') }}
+    {{ App\Utilities\Cli::yellow('Refreshing database migrations...') }}
 
     cd {{ $liveDir }} && php artisan migrate:refresh --force;
 
@@ -230,7 +233,7 @@
 
 @task('purge-releases', ['on' => 'production'])
 
-    {{ msg('Purging old releases...') }}
+    {{ App\Utilities\Cli::yellow('Purging old releases...') }}
 
     # This will list our releases by modification time and delete all but the 5 most recent.
     purging=$(ls -dt {{ $releasesDir }}/* | tail -n +5);
@@ -246,7 +249,7 @@
 
 @task('backup', ['on' => 'production'])
 
-    {{ msg('Creating backup...') }}
+    {{ App\Utilities\Cli::yellow('Creating backup...') }}
 
     cd {{ $liveDir }};
 
@@ -258,7 +261,7 @@
 @task('init', ['on' => 'production'])
 
     # Check apps directory.
-    {{ msg('Checking apps directory...') }}
+    {{ App\Utilities\Cli::yellow('Checking apps directory...') }}
     mkdir -p {{ $baseDir }};
     mkdir -p {{ $releasesDir }};
 
@@ -268,31 +271,6 @@
     mkdir -p {{ $baseDir }}/storage/framework/sessions;
     mkdir -p {{ $baseDir }}/storage/framework/views;
     mkdir -p {{ $baseDir }}/storage/logs;
-
-@endtask
-
-
-
-{{-- Local tasks --}}
-
-@task('build', ['on' => 'local'])
-
-    cd {{ $localDir }}
-
-    # Update bower dependencies.
-    {{ msg('Updating bower dependencies...') }}
-    npm install bower -g &> /dev/null
-    bower update &> /dev/null
-
-    # Update npm dependencies.
-    {{ msg('Updating node dependencies...') }}
-    npm install npm -g &> /dev/null
-    npm update &> /dev/null
-
-    # Build front-end assets.
-    {{ msg('Building assets...') }}
-    gulp --production &> /dev/null
-    gulp --production --back &> /dev/null
 
 @endtask
 
@@ -309,15 +287,29 @@
 
 @task('test-local', ['on' => 'local'])
 
-    {{ msg('Testing Envoy on localhost...') }}
+    {{ App\Utilities\Cli::lightBlue('Testing Envoy on localhost...') }}
+    {{ App\Utilities\Cli::black('Black') }}
+    {{ App\Utilities\Cli::red('Red') }}
+    {{ App\Utilities\Cli::green('Green') }}
+    {{ App\Utilities\Cli::brown('Brown') }}
+    {{ App\Utilities\Cli::blue('Blue') }}
+    {{ App\Utilities\Cli::purple('Purple') }}
+    {{ App\Utilities\Cli::cyan('Cyan') }}
+    {{ App\Utilities\Cli::lightGray('Light gray') }}
+    {{ App\Utilities\Cli::darkGray('Dark gray') }}
+    {{ App\Utilities\Cli::lightRed('Light red') }}
+    {{ App\Utilities\Cli::yellow('Yellow') }}
+    {{ App\Utilities\Cli::lightBlue('Light blue') }}
+    {{ App\Utilities\Cli::lightPurple('Light purple') }}
+    {{ App\Utilities\Cli::lightCyan('Light cyan') }}
 
-    ls
+    pwd
 
 @endtask
 
 @task('test-prod', ['on' => 'production'])
 
-    {{ msg('Testing Envoy on production server...') }}
+    {{ App\Utilities\Cli::yellow('Testing Envoy on production server...') }}
     ssh -T git@deployer
 
 @endtask
