@@ -450,17 +450,7 @@ class Definition extends Model
     {
         $types = static::types();
 
-        // If the type constant is valid, return it.
-        if (array_key_exists($type, $types)) {
-            return (int) $type;
-        }
-
-        // If the type string is valid, return the corresponding type constant.
-        elseif (in_array($type, $types)) {
-            return static::getTypeConstant($type);
-        }
-
-        return null;
+        return array_key_exists($type, $types) || in_array($type, $types);
     }
 
     /**
