@@ -75,12 +75,7 @@
 @task('test-code', ['on' => 'local'])
 
     {{ App\Utilities\Cli::lightBlue('Running unit tests...') }}
-    {{ App\Utilities\Cli::lightGray('TODO') }}
-    {{ App\Utilities\Cli::lightGreen('Unit tests passed !') }}
-
-    {{ App\Utilities\Cli::lightBlue('Running integration tests...') }}
-    {{ App\Utilities\Cli::lightGray('TODO') }}
-    {{ App\Utilities\Cli::lightGreen('Integration tests passed !') }}
+    {{ App\Utilities\Cli::lightGray('To do: run tests from Envoy and quit on fail') }}
 
 @endtask
 
