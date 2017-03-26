@@ -20,7 +20,7 @@ class EndpointsTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertStatus(302);
+        $response->assertRedirect('/0.4');
     }
 
     /**
@@ -28,13 +28,16 @@ class EndpointsTest extends TestCase
      *
      * @dataProvider getCountTestData()
      */
-    // public function testCount($endpoint, $expected)
-    // {
-    //     $response = $this->get($endpoint);
-    //
-    //     $response->assertStatus($expected);
-    // }
+    public function testCount($endpoint, $expected)
+    {
+        $response = $this->get($endpoint);
 
+        $response->assertStatus($expected);
+    }
+
+    /**
+     * @return array
+     */
     public function getCountTestData()
     {
         // TODO: get API version from config file
