@@ -60,6 +60,24 @@ class LanguageController extends BaseController
     }
 
     /**
+     * Language of the week.
+     *
+     * @return Response
+     */
+    public function getWeekly()
+    {
+        $embedStr   = $this->request->get('embed', '');
+        $weekly     = Language::weekly($embedStr);
+
+        if (! $weekly) {
+            return response('No Results Found.');
+        }
+
+        // Append extra attributes.
+        return $weekly->applyEmbedableAttributes($embedStr);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * TODO: integrate with API.

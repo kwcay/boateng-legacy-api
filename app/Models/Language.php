@@ -6,6 +6,8 @@ namespace App\Models;
 
 use DB;
 use Log;
+use Cache;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\EmbedableTrait as Embedable;
@@ -277,6 +279,38 @@ class Language extends Model
         $code = static::sanitizeCode($code);
 
         return $code ? static::where('code', $code)->exists() : false;
+    }
+
+    /**
+     * Retrieves the language of the week.
+     *
+     * @param string $embed
+     * @return App\Models\Language
+     */
+    public static function weekly($embed = '')
+    {
+        // Get date for upcoming Monday. If we're already Monday, find following one.
+        $nextMonday = Carbon::tomorrow();
+        while (! $nextMonday->isMonday()) {
+            $nextMonday->addDay();
+        }
+
+        // Cache the ID, and let it expire at midnight UTC every Sunday.
+        $cacheKey   = 'languages.weekly';
+        $expires    = Carbon::now()->diffInMinutes($nextMonday);
+
+        $id = Cache::remember($cacheKey, $expires, function () {
+            // Return a random language id.
+            return static::query()
+                ->orderByRaw('RAND()')
+                ->value('id');
+        });
+
+        if (! $id) {
+            return null;
+        }
+
+        return static::embed($embed)->find($id);
     }
 
     /**
