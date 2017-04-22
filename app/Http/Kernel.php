@@ -42,8 +42,8 @@ class Kernel extends HttpKernel
             'bindings',
         ],
 
-        'read' => ['scopes:resource-view'],
-        'write' => ['scopes:resource-view,resource-write'],
+        'read' => ['oauth.client:resource-read'],
+        'write' => ['scopes:resource-read,resource-write'],
     ];
 
     /**
@@ -54,13 +54,20 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+        // Authentication & authorization
         'auth'          => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic'    => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'bindings'      => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can'           => \Illuminate\Auth\Middleware\Authorize::class,
         'guest'         => \App\Http\Middleware\RedirectIfAuthenticated::class,
+
+        // OAuth & API
+        'oauth.client'  => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
+        'refresh-token' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
         'scopes'        => \Laravel\Passport\Http\Middleware\CheckScopes::class,
         'scopes.any'    => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
         'throttle'      => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+
+        // Miscellaneous
+        'bindings'      => \Illuminate\Routing\Middleware\SubstituteBindings::class,
     ];
 }
