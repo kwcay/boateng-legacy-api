@@ -36,12 +36,13 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         Route::middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
 
         // API v0.4
         Route::prefix('0.4')
-             ->namespace('App\Http\Controllers\v0_4')
-             ->group(base_path('routes/0.4.php'));
+            ->middleware('read')
+            ->namespace('App\Http\Controllers\v0_4')
+            ->group(base_path('routes/0.4.php'));
     }
 }

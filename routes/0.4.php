@@ -23,7 +23,7 @@ Route::options('definition/{id?}', 'ApiController@options');
 // Language endpoints.
 Route::get('languages/count', 'LanguageController@count');
 Route::get('languages/search/{query}', 'LanguageController@search');
-Route::get('languages/weekly', 'LanguageController@getWeekly')->middleware('read');
+Route::get('languages/weekly', 'LanguageController@getWeekly');
 Route::resource('languages', 'LanguageController', ['except' => ['create', 'edit']]);
 
 // Reference endpoints

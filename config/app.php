@@ -4,15 +4,15 @@ return [
 
     'name'      => 'Dora Boateng API',
     'version'   => '0.4',
-    'env' => env('APP_ENV', 'production'),
-    'debug' => env('APP_DEBUG', false),
-    'url' => env('APP_URL', 'https://api.doraboateng.com'),
-    'timezone' => 'UTC',
-    'locale' => 'en',
+    'env'       => env('APP_ENV', 'production'),
+    'debug'     => env('APP_DEBUG', false),
+    'url'       => env('APP_URL', 'https://api.doraboateng.com'),
+    'timezone'  => 'UTC',
+    'locale'    => 'en',
     'fallback_locale' => 'en',
-    'key' => env('APP_KEY'),
-    'cipher' => 'AES-256-CBC',
-    'log' => env('APP_LOG', 'single'),
+    'key'       => env('APP_KEY'),
+    'cipher'    => 'AES-256-CBC',
+    'log'       => env('APP_LOG', 'single'),
     'log_level' => env('APP_LOG_LEVEL', 'notice'),
     'providers' => [
 
@@ -59,6 +59,7 @@ return [
         App\Providers\ObfuscatorServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
+    
     'aliases' => [
         'App'           => Illuminate\Support\Facades\App::class,
         'Artisan'       => Illuminate\Support\Facades\Artisan::class,
