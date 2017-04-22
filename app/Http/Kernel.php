@@ -17,8 +17,8 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
-        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\UnobfuscateClientId::class,
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
     /**
@@ -41,6 +41,9 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
         ],
+
+        'read' => ['scopes:resource-view'],
+        'write' => ['scopes:resource-view,resource-write'],
     ];
 
     /**
@@ -51,11 +54,13 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'auth'          => \Illuminate\Auth\Middleware\Authenticate::class,
+        'auth.basic'    => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'bindings'      => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'can'           => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest'         => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'scopes'        => \Laravel\Passport\Http\Middleware\CheckScopes::class,
+        'scopes.any'    => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
+        'throttle'      => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     ];
 }
