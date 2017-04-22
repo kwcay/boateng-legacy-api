@@ -42,8 +42,8 @@ class Kernel extends HttpKernel
             'bindings',
         ],
 
-        'read' => ['oauth.client:resource-read'],
-        'write' => ['scopes:resource-read,resource-write'],
+        'read' => ['oauth-client:resource-read'],
+        'write' => ['oauth-client:resource-read,resource-write'],
     ];
 
     /**
@@ -61,7 +61,7 @@ class Kernel extends HttpKernel
         'guest'         => \App\Http\Middleware\RedirectIfAuthenticated::class,
 
         // OAuth & API
-        'oauth.client'  => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
+        'oauth-client'  => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
         'refresh-token' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
         'scopes'        => \Laravel\Passport\Http\Middleware\CheckScopes::class,
         'scopes.any'    => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
