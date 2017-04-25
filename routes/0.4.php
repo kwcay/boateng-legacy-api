@@ -6,6 +6,9 @@
 //
 Route::get('/', 'ApiController@version');
 
+// Authentication endpoints
+Route::post('auth', 'AuthController@login');
+
 // Culture endpoints.
 Route::get('cultures/count', 'CultureController@count');
 Route::get('cultures/search/{query}', 'CultureController@search');
