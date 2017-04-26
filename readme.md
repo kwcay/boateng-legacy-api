@@ -29,3 +29,18 @@ mysqldump boateng > boateng.sql
 mysqldump --databases db_name1 [db_name2 ...] > my_databases.sql
 mysqldump --all-databases > all_databases.sql
 ```
+
+# Miscelaneous
+
+## OAuth clients
+
+New clients can be created from the command line (see `php artisan help passport:client`).
+
+## Obfuscator
+
+To play with the obfuscator:
+```bash
+php artisan tinker
+>>> $obfuscator = app('Obfuscator');
+>>> $obfuscator->encode(1);
+```

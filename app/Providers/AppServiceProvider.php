@@ -20,9 +20,12 @@ class AppServiceProvider extends ServiceProvider
         Passport::tokensCan([
             'resource-read'     => 'View resources',
             'resource-write'    => 'View and manage resources',
-            'user-read'         => 'View email and other account info',
+            'user-read'         => 'Login and view email address/other account info',
             'user-write'        => 'View and manage account',
         ]);
+
+        // OAuth routes
+        Passport::routes();
     }
 
     /**
