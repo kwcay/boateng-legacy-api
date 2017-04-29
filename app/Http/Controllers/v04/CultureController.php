@@ -12,7 +12,7 @@ use App\Models\Culture;
 use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\v0_4\Contract as BaseController;
+use App\Http\Controllers\v0_4\Controller as BaseController;
 
 class CultureController extends BaseController
 {

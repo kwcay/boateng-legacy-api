@@ -36,6 +36,9 @@ Route::get('tags/count', 'TagController@count');
 Route::get('tags/search/{query}', 'TagController@search');
 Route::resource('tags', 'TagController', ['except' => ['create', 'edit']]);
 
+// User endpoints
+Route::get('user', 'UserController@current');
+
 // General lookup
 Route::get('search/{query}', 'ApiController@generalSearch');
 Route::get('latest', 'ApiController@latest');

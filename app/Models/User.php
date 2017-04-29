@@ -10,14 +10,14 @@ use Illuminate\Notifications\Notifiable;
 use App\Traits\EmbedableTrait as Embedable;
 use App\Traits\ExportableTrait as Exportable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\ObfuscatableTrait as ObfuscatesID;
+use App\Traits\ObfuscatableTrait as Obfuscatable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class User extends Authenticatable
 {
     // use Authenticatable, CamelCaseAttrs, CanResetPassword, Embedable, Exportable, HasRoles, ObfuscatesID, SoftDeletes;
-    use CamelCaseAttrs, Embedable, Exportable, HasApiTokens, Notifiable, ObfuscatesID, SoftDeletes;
+    use CamelCaseAttrs, Embedable, Exportable, HasApiTokens, Notifiable, Obfuscatable, SoftDeletes;
 
 
     //

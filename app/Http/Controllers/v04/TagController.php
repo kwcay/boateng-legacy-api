@@ -11,7 +11,7 @@ use Request;
 use App\Models\Tag;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\v0_4\Contract as BaseController;
+use App\Http\Controllers\v0_4\Controller as BaseController;
 
 class TagController extends BaseController
 {

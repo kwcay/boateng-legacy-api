@@ -9,9 +9,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\LanguageFamily;
-use App\Http\Controllers\v0_4\Contract as BaseController;
+use App\Http\Controllers\v0_4\Controller as BaseController;
 
 class LanguageFamilyController extends BaseController
 {
-    
+
 }

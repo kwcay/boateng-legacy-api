@@ -1,45 +1,51 @@
 <?php
 /**
- * Copyright Dora Boateng(TM) 2016, all rights reserved.
+ * Copyright Dora Boateng(TM) 2017, all rights reserved.
  *
  * @version 0.4
- * @brief   Handles reference-related API requests.
+ * @brief   Handles user-related API requests.
  */
 namespace App\Http\Controllers\v0_4;
 
 use Request;
+use App\Models\User;
 use App\Http\Requests;
-use App\Models\Reference;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\v0_4\Controller as BaseController;
+use App\Http\Controllers\v0_4\Controller;
 
-class ReferenceController extends BaseController
+class UserController extends Controller
 {
     /**
-     * Returns a tag resource.
-     *
-     * @param string $id    Unique ID of tag.
-     * @return object
+     * TODO: restrict access to this endpoint
      */
+    public function index()
+    {
+        return response('Not Implemented.', 501);
+    }
+
+    public function current()
+    {
+        if (! $user = Auth::user()) {
+            return response('Unauthorized.', 401);
+        }
+
+        return $user;
+    }
+
     public function show($id)
     {
         // Performance check.
-        if (! $id = Reference::decodeId($id)) {
-            return response('Invalid Reference ID.', 400);
+        if (! $id = User::decodeId($id)) {
+            return response(self::ERR_STR_INVALID_ID, 400);
         }
 
-        // List of relations and attributes to append to results.
-        $embed = $this->getEmbedArray(
-            Request::get('embed'),
-            Reference::$appendable
-        );
-
-        // Retrieve definition object
-        if (! $reference = Reference::with($embed['relations']->toArray())->find($id)) {
-            return response('Reference Not Found.', 404);
+        // Retrieve user object
+        if (! $user = User::embed(Request::get('embed'))->find($id)) {
+            return response('User not found.', 404);
         }
 
-        return $reference;
+        $user->applyEmbedableAttributes(Request::get('embed'));
+
+        return $user;
     }
 
     /**

@@ -8,10 +8,12 @@ use Auth;
 use Session;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller as BaseController;
 
-abstract class Contract extends Controller
+abstract class Controller extends BaseController
 {
+    const ERR_STR_INVALID_ID = 'Invalid identifier.';
+
     /**
      * Internal name used to map controller to its model, views, etc.
      *

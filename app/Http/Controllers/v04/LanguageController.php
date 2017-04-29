@@ -12,7 +12,7 @@ use Session;
 use Request;
 use Redirect;
 use App\Models\Language;
-use App\Http\Controllers\v0_4\Contract as BaseController;
+use App\Http\Controllers\v0_4\Controller as BaseController;
 
 class LanguageController extends BaseController
 {

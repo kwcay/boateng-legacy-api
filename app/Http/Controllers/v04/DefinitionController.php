@@ -18,7 +18,7 @@ use App\Models\Definitions\Word;
 use App\Http\Controllers\Controller;
 use App\Models\Definitions\Expression;
 // use Frnkly\ControllerTraits\Embedable;
-use App\Http\Controllers\v0_4\Contract as BaseController;
+use App\Http\Controllers\v0_4\Controller as BaseController;
 
 class DefinitionController extends BaseController
 {
