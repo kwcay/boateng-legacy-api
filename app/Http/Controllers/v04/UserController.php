@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers\v0_4;
 
+use Auth;
 use Request;
 use App\Models\User;
 use App\Http\Requests;
