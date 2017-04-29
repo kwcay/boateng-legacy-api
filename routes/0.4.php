@@ -37,7 +37,7 @@ Route::get('tags/search/{query}', 'TagController@search');
 Route::resource('tags', 'TagController', ['except' => ['create', 'edit']]);
 
 // User endpoints
-Route::get('user', 'UserController@current');
+Route::get('user', 'UserController@current')->middleware('auth:api');
 
 // General lookup
 Route::get('search/{query}', 'ApiController@generalSearch');

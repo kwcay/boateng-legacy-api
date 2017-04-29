@@ -24,11 +24,7 @@ class UserController extends Controller
 
     public function current()
     {
-        if (! $user = Auth::user()) {
-            return response('Unauthorized.', 401);
-        }
-
-        return $user;
+        return Auth::user();
     }
 
     public function show($id)
