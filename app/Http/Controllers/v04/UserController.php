@@ -25,7 +25,12 @@ class UserController extends Controller
 
     public function current()
     {
-        return Auth::user();
+        // TODO: urn should be embedded by default.
+        if ($user = Auth::user()) {
+            $user->applyEmbedableAttributes('urn');
+        }
+
+        return $user;
     }
 
     public function show($id)

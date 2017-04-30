@@ -32,22 +32,9 @@ class User extends Authenticatable
      * database relations.
      */
     public $embedable = [
+        'urn' => null,
     ];
 
-
-    //
-    //
-    // Attributes used by App\Traits\ExportableTrait
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * The attributes that should be hidden from the model's array form when exporting data to file.
-     */
-    protected $hiddenFromExport = [
-        'id',
-    ];
 
     //
     //
@@ -99,6 +86,7 @@ class User extends Authenticatable
         'id',
         'password',
         'remember_token',
+        'uri',
     ];
 
 
@@ -131,5 +119,14 @@ class User extends Authenticatable
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-    // ...
+    /**
+     * Accessor for $this->urn.
+     *
+     * @param  string  $urn
+     * @return string
+     */
+    public function getUrnAttribute($urn = '')
+    {
+        return str_replace('local/', 'doraboateng:', $urn ?: $this->uri);
+    }
 }
