@@ -43,7 +43,7 @@ class Kernel extends HttpKernel
         ],
 
         'read' => ['oauth-client:resource-read'],
-        'write' => ['oauth-client:resource-read,resource-write'],
+        'write' => ['oauth-client:resource-read', 'auth:api'],
     ];
 
     /**
