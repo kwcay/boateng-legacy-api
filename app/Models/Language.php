@@ -86,7 +86,7 @@ class Language extends Model
      *
      * @var bool
      */
-    public static $searchIsTaggable = false;
+    final public static $searchIsTaggable = false;
 
 
     //
@@ -144,10 +144,10 @@ class Language extends Model
      * @var array
      */
     protected $casts = [
-        'code' => 'string',
-        'parent_code' => 'string',
-        'name' => 'string',
-        'alt_names' => 'string',
+        'code'          => 'string',
+        'parent_code'   => 'string',
+        'name'          => 'string',
+        'alt_names'     => 'string',
     ];
 
     /**
@@ -176,10 +176,10 @@ class Language extends Model
      * Validation rules.
      */
     public $validationRules = [
-        'code' => 'sometimes|required|min:3|max:7|unique:languages',
-        'parent_code' => 'min:3|max:7',
-        'name' => 'required|min:2',
-        'alt_names' => 'min:2',
+        'code'          => 'sometimes|required|min:3|max:7|unique:languages',
+        'parent_code'   => 'min:3|max:7',
+        'name'          => 'required|min:2',
+        'alt_names'     => 'min:2',
     ];
 
 
@@ -188,6 +188,7 @@ class Language extends Model
     // Relations
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Defines relation to Language model (parent relation).

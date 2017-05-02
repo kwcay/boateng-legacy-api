@@ -77,27 +77,20 @@ class LanguageController extends BaseController
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * TODO: integrate with API.
+     * Creates a new language record.
      *
      * @return Response
      */
     public function store()
     {
-        // Retrieve the language details.
-        $data = Request::only(['code', 'parent_code', 'name', 'alt_names', 'countries']);
-
-        // Set return route.
-        $return = Request::input('next') == 'continue' ? 'edit' : 'index';
-
-        return $this->save(new Language, $data, $return);
+        return $this->save(
+            new Language,
+            $this->request->only(['code', 'parent_code', 'name', 'alt_names'])
+        );
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * TODO: integrate with API.
+     * Updates a language record and it's relations.
      *
      * @param  int  $id
      * @return Response
@@ -106,13 +99,13 @@ class LanguageController extends BaseController
     {
         // Retrieve the language object.
         if (! $lang = $this->getLanguage($id)) {
-            abort(404, 'Can\'t find that languge :( [todo: throw exception]');
+            abort(404, 'Can\'t find that language :/');
         }
 
-        // Retrieve the language details.
-        $data = Request::only(['parent_code', 'name', 'alt_names', 'countries']);
-
-        return $this->save($lang, $data, 'index');
+        return $this->save(
+            $lang,
+            $this->request->only(['parent_code', 'name', 'alt_names'])
+        );
     }
 
     /**
@@ -125,7 +118,7 @@ class LanguageController extends BaseController
      */
     public function destroy($id)
     {
-        abort(501, 'LanguageController::destroy Not Implemented');
+        abort(501, 'Not Implemented.');
     }
 
     /**
@@ -133,18 +126,12 @@ class LanguageController extends BaseController
      *
      * TODO: integrate with API.
      *
-     * @param \App\Models\Language $lang    Language object.
-     * @param array $data                   Language details to update.
-     * @param string $return                Relative URI to redirect to.
+     * @param  \App\Models\Language $lang
+     * @param  array $data
      * @return Response
      */
-    public function save($lang, $data, $return)
+    public function save($lang, $data)
     {
-        // ...
-        if (isset($data['countries']) && is_array($data['countries'])) {
-            $data['countries'] = implode(',', $data['countries']);
-        }
-
         // Validate input data
         $test = Language::validate($data);
         if ($test->fails()) {
