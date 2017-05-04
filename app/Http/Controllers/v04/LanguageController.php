@@ -133,15 +133,9 @@ class LanguageController extends BaseController
     public function save($lang, $data)
     {
         // Validate input data
-        $test = Language::validate($data);
-        if ($test->fails()) {
-            // Flash input data to session
-            Request::flashExcept('_token');
-
-            // Return to form
-            $return = $lang->exists ? route('language.edit', ['id' => $lang->getId()]) : route('language.create');
-
-            return redirect($return)->withErrors($test);
+        $validator = Language::validate($data);
+        if ($validator->fails()) {
+            $this->throwValidationException($this->request, $validator);
         }
 
         // Parent language details
@@ -156,24 +150,7 @@ class LanguageController extends BaseController
         $lang->fill($data);
         $lang->save();
 
-        // ...
-        switch ($return) {
-            case 'index':
-                $return = $lang->getUri(false);
-                break;
-
-            case 'edit':
-                $return = route('language.edit', ['code' => $lang->code]);
-                break;
-
-            case 'add':
-                $return = route('language.create');
-                break;
-        }
-
-        Session::push('messages', 'The details for <em>'.$lang->name.'</em> were successfully saved, thanks :)');
-
-        return redirect($return);
+        return $lang;
     }
 
     /**

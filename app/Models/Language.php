@@ -86,7 +86,7 @@ class Language extends Model
      *
      * @var bool
      */
-    final public static $searchIsTaggable = false;
+    public static $searchIsTaggable = false;
 
 
     //
