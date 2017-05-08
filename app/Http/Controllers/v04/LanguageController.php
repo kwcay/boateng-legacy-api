@@ -90,7 +90,7 @@ class LanguageController extends BaseController
     }
 
     /**
-     * Updates a language record and it's relations.
+     * Updates a language record and its relations.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -126,7 +126,7 @@ class LanguageController extends BaseController
      * @param  array  $data
      * @return \Illuminate\Http\Response
      */
-    public function save($lang, $data)
+    protected function save($lang, $data)
     {
         // Validate input data
         $validator = Language::validate($data);
@@ -136,7 +136,9 @@ class LanguageController extends BaseController
 
         // Update language details.
         $lang->fill($data);
-        $lang->save();
+        if (! $lang->save()) {
+            return response('Could Not Save Language.', 500);
+        }
 
         // TODO: update relations.
 

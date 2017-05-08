@@ -176,18 +176,20 @@ class DefinitionController extends BaseController
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @todo   Review
+     * Stores a new definition record.
      *
      * @return \Illuminate\Http\Response
      */
     public function store()
     {
         // Instantiate by definition type.
-        switch (Request::input('type')) {
+        switch ($this->request->input('type')) {
             case Definition::TYPE_WORD:
                 $definition = new Word;
+                break;
+
+            case Definition::TYPE_EXPRESSION:
+                $definition = new Expression;
                 break;
 
             default:
@@ -197,10 +199,24 @@ class DefinitionController extends BaseController
         $definition->state = Definition::STATE_VISIBLE;
 
         // Retrieve data for new definition.
-        $data = Request::only(['title', 'alt_titles', 'sub_type']);
+        $data = $this->request->only(['title', 'alt_titles', 'sub_type']);
 
         // Create the record in the database.
         return $this->save($definition, $data);
+    }
+
+    /**
+     * Updates a definition record and its relations.
+     *
+     * @param  int $id
+     * @throws \Exception
+     * @return \Illuminate\Http\Response
+     */
+    public function update($id)
+    {
+        // TODO ...
+
+        return response('Not Implemented.', 501);
     }
 
     /**
@@ -210,13 +226,12 @@ class DefinitionController extends BaseController
      * @param  array $data
      * @return \Illuminate\Http\Response
      */
-    public function save($definition, array $data = [])
+    protected function save($definition, array $data = [])
     {
-        // Validate incoming data.
-        $validation = Definition::validate($data);
-        if ($validation->fails()) {
-            // Return first message as error hint.
-            return response($validation->messages()->first(), 400);
+        // Validate input data
+        $validator = Definition::validate($data);
+        if ($validator->fails()) {
+            $this->throwValidationException($this->request, $validator);
         }
 
         // Add definition to database.
@@ -226,7 +241,7 @@ class DefinitionController extends BaseController
         }
 
         // Add language relations.
-        $languageCodes = Request::input('languages');
+        $languageCodes = $this->request->input('languages');
         if (is_array($languageCodes)) {
             $languageIDs = [];
 
@@ -240,7 +255,7 @@ class DefinitionController extends BaseController
         }
 
         // Add translation relations.
-        $rawTranslations = Request::input('translations');
+        $rawTranslations = $this->request->input('translations');
         if (is_array($rawTranslations)) {
             $translations = [];
 
@@ -253,20 +268,6 @@ class DefinitionController extends BaseController
         }
 
         return $definition;
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int $id
-     * @throws \Exception
-     * @return \Illuminate\Http\Response
-     */
-    public function update($id)
-    {
-        // TODO ...
-
-        return response('Not Implemented.', 501);
     }
 
     /**
