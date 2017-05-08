@@ -138,14 +138,6 @@ class LanguageController extends BaseController
             $this->throwValidationException($this->request, $validator);
         }
 
-        // Parent language details
-        if (strlen($data['parent_code']) >= 3 && $parent = Language::findByCode($data['parent_code'])) {
-            $lang->setParam('parentName', $parent->name);
-        } else {
-            $data['parent_code'] = '';
-            $lang->setParam('parentName', '');
-        }
-
         // Update language details.
         $lang->fill($data);
         $lang->save();

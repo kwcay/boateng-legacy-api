@@ -28,7 +28,7 @@ class CamelCaseRequest
     {
         $this->update($request->query);
         $this->update($request->request);
-        $this->update($request->json());
+        $request->setJson($this->update($request->json()));
 
         return $next($request);
     }
@@ -43,5 +43,7 @@ class CamelCaseRequest
                 $params->set(snake_case($key), $value);
             }
         }
+
+        return $params;
     }
 }

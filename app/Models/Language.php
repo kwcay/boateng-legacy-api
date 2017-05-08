@@ -164,12 +164,12 @@ class Language extends Model
      */
     protected $fillable = [
         'code',
-        'parentCode',
+        'parent_code',
         'name',
         'transliteration',
-        'altNames',
-        'createdAt',
-        'deletedAt',
+        'alt_names',
+        'created_at',
+        'deleted_at',
     ];
 
     /**
