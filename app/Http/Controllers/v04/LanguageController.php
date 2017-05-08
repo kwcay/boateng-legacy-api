@@ -32,8 +32,8 @@ class LanguageController extends BaseController
     /**
      * Retrieves a language resource.
      *
-     * @param string $id    Either the ISO 639-3 language code or language ID.
-     * @return Response
+     * @param  string $id    Either the ISO 639-3 language code or language ID.
+     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -61,7 +61,7 @@ class LanguageController extends BaseController
     /**
      * Language of the week.
      *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function getWeekly()
     {
@@ -79,7 +79,7 @@ class LanguageController extends BaseController
     /**
      * Creates a new language record.
      *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function store()
     {
@@ -93,7 +93,7 @@ class LanguageController extends BaseController
      * Updates a language record and it's relations.
      *
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function update($id)
     {
@@ -111,10 +111,8 @@ class LanguageController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * TODO: integrate with API.
-     *
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
@@ -124,11 +122,9 @@ class LanguageController extends BaseController
     /**
      * Shortcut to create a new language or save an existing one.
      *
-     * TODO: integrate with API.
-     *
-     * @param  \App\Models\Language $lang
-     * @param  array $data
-     * @return Response
+     * @param  \App\Models\Language  $lang
+     * @param  array  $data
+     * @return \Illuminate\Http\Response
      */
     public function save($lang, $data)
     {
@@ -141,6 +137,8 @@ class LanguageController extends BaseController
         // Update language details.
         $lang->fill($data);
         $lang->save();
+
+        // TODO: update relations.
 
         return $lang;
     }
