@@ -53,8 +53,8 @@ class DefinitionController extends BaseController
     /**
      * Returns a definition resource.
      *
-     * @param string $id    Unique ID of definition.
-     * @return object
+     * @param  string  $id  Unique ID of definition.
+     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -75,6 +75,8 @@ class DefinitionController extends BaseController
 
     /**
      * Returns a random definition
+     *
+     * @return \Illuminate\Http\Response
      */
     public function random($langCode = null)
     {
@@ -93,9 +95,11 @@ class DefinitionController extends BaseController
     /**
      * Finds definitions matching a title (exact match).
      *
+     * @todo  Review
+     *
      * @param string $definitionType
      * @param string $title
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function findByTitle($title)
     {
@@ -136,7 +140,7 @@ class DefinitionController extends BaseController
      *
      * @param string $definitionType
      * @param string $title
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function getDaily($type = null)
     {
@@ -174,7 +178,9 @@ class DefinitionController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @return Response
+     * @todo   Review
+     *
+     * @return \Illuminate\Http\Response
      */
     public function store()
     {
@@ -200,9 +206,9 @@ class DefinitionController extends BaseController
     /**
      * Shortcut to save a definition model.
      *
-     * @param \App\Models\Definition $definition
-     * @param array $data
-     * @return Response
+     * @param  \App\Models\Definition $definition
+     * @param  array $data
+     * @return \Illuminate\Http\Response
      */
     public function save($definition, array $data = [])
     {
@@ -254,7 +260,7 @@ class DefinitionController extends BaseController
      *
      * @param  int $id
      * @throws \Exception
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function update($id)
     {
@@ -268,7 +274,7 @@ class DefinitionController extends BaseController
      *
      * @param  int $id
      * @throws \Exception
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
