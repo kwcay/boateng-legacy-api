@@ -24,6 +24,7 @@ Route::get('definitions/title/{title}', 'DefinitionController@findBytitle');
 Route::resource('definitions',          'DefinitionController', ['only' => ['index', 'show']]);
 Route::post('definitions',              'DefinitionController@store')->middleware('write');
 Route::put('definitions/{id}',          'DefinitionController@update')->middleware('write');
+Route::patch('definitions/{id}',        'DefinitionController@update')->middleware('write');
 Route::delete('definitions/{id}',       'DefinitionController@delete')->middleware('write');
 Route::options('definitions/{id?}',     'ApiController@options')->middleware('write');
 

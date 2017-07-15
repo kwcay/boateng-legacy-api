@@ -240,6 +240,7 @@ class Definition extends Model
      * Attributes that SHOULD be appended to the model's array form.
      */
     protected $appends = [
+        'subType',
         'uniqueId',
         'resourceType',
     ];
