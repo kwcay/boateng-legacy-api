@@ -131,6 +131,64 @@ class Definition extends Model
 
     /**
      * Definition types.
+     *
+     * @const array
+     */
+    const TYPES = [
+        self::TYPE_WORD         => 'word',
+        self::TYPE_NAME         => 'name',
+        self::TYPE_EXPRESSION   => 'expression',
+        self::TYPE_STORY        => 'story',
+    ];
+
+    const SUB_TYPES = [
+
+        // Parts of speech.
+        // See: http://www.edb.utexas.edu/minliu/pbl/ESOL/help/libry/speech.htm
+        // See: http://www.aims.edu/student/online-writing-lab/grammar/parts-of-speech
+        self::TYPE_WORD => [
+            'adj'   => 'adjective',
+            'adv'   => 'adverb',
+            'conn'  => 'connective',
+            'ex'    => 'exclamation',
+            'pre'   => 'preposition',
+            'pro'   => 'pronoun',
+            'n'     => 'noun',
+            'v'     => 'verb',
+            'intv'  => 'intransitive verb',
+
+            // Morphemes
+            'prefix'     => 'prefix',
+            'suffix'     => 'suffix',
+        ],
+
+        // Types of proper names.
+        self::TYPE_NAME => [
+            'person'    => 'person',
+            'place'     => 'place',
+            'name'      => 'other proper name',
+        ],
+
+        // Types of phrases.
+        self::TYPE_EXPRESSION => [
+            'expression' => 'common expression',
+            'phrase'    => 'simple phrase',
+            'proverb'   => 'proverb or saying',
+        ],
+
+        // Types of stories
+        self::TYPE_STORY => [
+            'poem'  => 'poem',
+            'story'  => 'short story',
+            'song'  => 'song',
+        ],
+    ];
+
+    /**
+     * Definition types.
+     *
+     * @deprecated
+     * @var array
      */
     public $types = [
         self::TYPE_WORD         => 'word',
@@ -141,6 +199,9 @@ class Definition extends Model
 
     /**
      * Definition sub-types.
+     *
+     * @deprecated
+     * @var array
      */
     public $subTypes = [
 

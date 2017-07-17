@@ -10,10 +10,12 @@ namespace App\Http\Controllers\v0_4;
 use Auth;
 use Lang;
 use Request;
+use Validator;
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Translation;
+use Illuminate\Validation\Rule;
 use App\Models\Definitions\Word;
 use App\Http\Controllers\Controller;
 use App\Models\Definitions\Expression;
@@ -208,15 +210,17 @@ class DefinitionController extends BaseController
     /**
      * Updates a definition record and its relations.
      *
-     * @param  int $id
-     * @throws \Exception
+     * @param  int  $id  Encrypted ID
      * @return \Illuminate\Http\Response
      */
     public function update($id)
     {
-        // TODO ...
+        // Retrieve definition object
+        if (! $definition = Definition::find($id)) {
+            return response('Definition Not Found.', 404);
+        }
 
-        return response('Not Implemented.', 501);
+        return $this->save($definition);
     }
 
     /**
@@ -226,19 +230,33 @@ class DefinitionController extends BaseController
      * @param  array $data
      * @return \Illuminate\Http\Response
      */
-    protected function save($definition, array $data = [])
+    protected function save($definition)
     {
-        // Validate input data
-        $validator = Definition::validate($data);
-        if ($validator->fails()) {
-            $this->throwValidationException($this->request, $validator);
-        }
+        // Validate incoming data
+        $this->validate($this->request, [
+            'type'      => ['required', Rule::in(Definition::TYPES)],
+        ]);
+
+        $type = Definition::getTypeConstant($this->request->get('type'));
+
+        // TODO: find a way to validate everything at once
+        $this->validate($this->request, [
+            'sub_type'  => ['required', Rule::in(array_flip(Definition::SUB_TYPES[$type]))],
+        ]);
+
+        // TODO: validate titles (array), translationData, tags, ...
 
         // Add definition to database.
-        $definition->fill($data);
+        $definition->fill([
+            'type'      => $type,
+            'sub_type'  => $this->request->get('sub_type'),
+        ]);
+
         if (! $definition->save()) {
             return response('Could Not Save Definition.', 500);
         }
+
+        return $definition;
 
         // Add language relations.
         $languageCodes = $this->request->input('languages');

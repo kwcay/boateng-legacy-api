@@ -98,7 +98,7 @@ class Architecture062 extends Migration
 
             $table->tinyInteger('type')->unsigned();
             $table->string('sub_type', 10);
-            $table->string('main_language_code', 7);
+            $table->string('main_language_code', 7);            // @deprecated
             $table->json('related_definitions')->nullable();
             $table->tinyInteger('rating')->unsigned();
             $table->text('meta');
