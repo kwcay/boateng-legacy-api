@@ -5,7 +5,8 @@
     (new \Dotenv\Dotenv(__DIR__, '.env'))->load();
 
     # Setup variables.
-    $repository         = 'git@deployer:doraboateng/api.git';
+    $gitHost            = env('ENVOY_GIT_HOST', 'deployer');
+    $repository         = 'git@'.$gitHost.':doraboateng/api.git';
     $baseDir            = env('ENVOY_BASE_DIR', '/var/www/apps');
     $releasesDir        = "{$baseDir}/releases";
     $liveDir            = env('ENVOY_LIVE_DIR', '/var/www/live');
@@ -82,7 +83,7 @@
 @task('test-git', ['on' => 'production'])
 
     {{ App\Utilities\Cli::yellow('Testing Git...') }}
-    ssh -T git@deployer
+    {{ 'ssh -T git@'.$gitHost }}
     {{ App\Utilities\Cli::lightGreen('Git is good to go.') }}
 
 @endtask
@@ -305,6 +306,6 @@
 @task('test-prod', ['on' => 'production'])
 
     {{ App\Utilities\Cli::yellow('Testing Envoy on production server...') }}
-    ssh -T git@deployer
+    ssh -T git@<?= $gitHost ?>
 
 @endtask
