@@ -13,8 +13,8 @@
     $newReleaseName     = date('Ymd-His');
     $localDir           = dirname(__FILE__);
 
-    $productionServer   = env('ENVOY_PRODUCTION', '127.0.0.1');
-    $localServer        = env('ENVOY_LOCAL', '127.0.0.1');
+    $productionServer   = env('ENVOY_PRODUCTION_SERVER', '127.0.0.1');
+    $localServer        = env('ENVOY_LOCAL_SERVER', '127.0.0.1');
 
 @endsetup
 
