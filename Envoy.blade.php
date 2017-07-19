@@ -264,6 +264,7 @@
     # Make sure the persistent storage directory exists.
     mkdir -p {{ $baseDir }}/storage;
     mkdir -p {{ $baseDir }}/storage/app;
+    mkdir -p {{ $baseDir }}/storage/framework/cache;
     mkdir -p {{ $baseDir }}/storage/framework/sessions;
     mkdir -p {{ $baseDir }}/storage/framework/views;
     mkdir -p {{ $baseDir }}/storage/logs;
