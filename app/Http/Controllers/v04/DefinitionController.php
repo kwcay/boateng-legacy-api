@@ -252,6 +252,22 @@ class DefinitionController extends BaseController
             'sub_type'  => $this->request->get('sub_type'),
         ]);
 
+        // TODO: state hash to see if this object had any changes made
+
+        // Add contributor
+        // TODO: move this to model
+        // TODO: order by some kind of authoritative status
+        $authorId   = $this->request->user()->id;
+        $authors    = isset($definition->meta['authors']) && $definition->meta['authors']
+            ? (array) $definition->meta['authors']
+            : [];
+        if (! in_array($authorId, $authors)) {
+            $authors[] = $authorId;
+            $definition->meta = ['authors' => $authors];
+        }
+
+        // TODO: edit history
+
         if (! $definition->save()) {
             return response('Could Not Save Definition.', 500);
         }
