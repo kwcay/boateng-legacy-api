@@ -2,17 +2,17 @@
 /**
  * Copyright Dora Boateng(TM) 2016, all rights reserved.
  *
- * @version 0.4
+ * @version 0.5
  * @brief   Handles language-related API requests.
  */
-namespace App\Http\Controllers\v0_4;
+namespace App\Http\Controllers\v0_5;
 
 use Lang;
 use Session;
 use Request;
 use Redirect;
 use App\Models\Language;
-use App\Http\Controllers\v0_4\Controller as BaseController;
+use App\Http\Controllers\v0_5\Controller as BaseController;
 
 class LanguageController extends BaseController
 {

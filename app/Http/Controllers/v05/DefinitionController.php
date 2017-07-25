@@ -24,8 +24,14 @@ use App\Http\Controllers\v0_5\Controller as BaseController;
 
 class DefinitionController extends BaseController
 {
+    /**
+     *
+     */
     protected $defaultQueryLimit = 50;
 
+    /**
+     *
+     */
     protected $supportedOrderColumns = [
         'id'        => 'ID',
         'createdAt' => 'Created date',
@@ -38,8 +44,7 @@ class DefinitionController extends BaseController
      */
     public function index()
     {
-        $langCode = $this->getParam('lang', '');
-        $langCode = Language::sanitizeCode($langCode);
+        $langCode = Language::sanitizeCode($this->request->get('lang'));
 
         // Only allow index for a specified language.
         if (! $langCode) {
@@ -55,6 +60,7 @@ class DefinitionController extends BaseController
     /**
      * Returns a definition resource.
      *
+     * @todo   Move to parent class.
      * @param  string  $id  Unique ID of definition.
      * @return \Illuminate\Http\Response
      */
@@ -78,6 +84,7 @@ class DefinitionController extends BaseController
     /**
      * Returns a random definition
      *
+     * @param  string $langCode
      * @return \Illuminate\Http\Response
      */
     public function random($langCode = null)
@@ -195,16 +202,11 @@ class DefinitionController extends BaseController
                 break;
 
             default:
-                return response('Invalid definition type.', 400);
+                return response('Invalid Definition Type.', 400);
         }
 
-        $definition->state = Definition::STATE_VISIBLE;
-
-        // Retrieve data for new definition.
-        $data = $this->request->only(['title', 'alt_titles', 'sub_type']);
-
         // Create the record in the database.
-        return $this->save($definition, $data);
+        return $this->save($definition);
     }
 
     /**
@@ -226,28 +228,32 @@ class DefinitionController extends BaseController
     /**
      * Shortcut to save a definition model.
      *
-     * @param  \App\Models\Definition $definition
+     * @param  App\Models\Definition $definition
      * @param  array $data
-     * @return \Illuminate\Http\Response
+     * @return Illuminate\Http\Response
      */
     protected function save($definition)
     {
         // Validate incoming data
         $this->validate($this->request, [
-            'type'                  => ['required', Rule::in(Definition::TYPES)],
+            'type'              => ['required', Rule::in(Definition::TYPES)],
 
             // Titles
-            'titleList'             => 'required|array|min:1',
-            'titleList.*.title'     => 'required|string|min:1',
+            'titles'            => 'required|array|min:1',
+            'titles.*.title'    => 'required|string|min:1',
+
+            // Languages
+            'languages'         => 'required|array|min:1',
+            'languages.*'       => 'exists:languages,code',
 
             // Translations
-            'translationData'       => 'required|array|min:1',
+            'translations'      => 'array',
+
+            // Tags
+            'tags'              => 'array',
 
             // Related definitions
             'relatedDefinitionList' => 'array',
-
-            // Tags
-            'tagList'               => 'array',
         ]);
 
         $type = Definition::getTypeConstant($this->request->get('type'));
@@ -259,7 +265,7 @@ class DefinitionController extends BaseController
 
         // TODO: validate titles (array), translationData, tags, ...
 
-        dd($definition->titles);
+        dd('ok');
 
         // Add definition to database.
         $definition->fill([

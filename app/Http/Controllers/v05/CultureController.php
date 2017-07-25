@@ -5,14 +5,14 @@
  * @version 0.4
  * @brief   Handles culture-related API requests.
  */
-namespace App\Http\Controllers\v0_4;
+namespace App\Http\Controllers\v0_5;
 
 use App\Http\Requests;
 use App\Models\Culture;
 use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\v0_4\Controller as BaseController;
+use App\Http\Controllers\v0_5\Controller as BaseController;
 
 class CultureController extends BaseController
 {

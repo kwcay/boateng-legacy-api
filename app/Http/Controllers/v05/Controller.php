@@ -366,30 +366,14 @@ abstract class Controller extends BaseController
     /**
      * Retrieves an instance of a model by ID.
      *
-     * @param mixed $id
+     * @param  int $id
      * @return Illuminate\Database\Eloquent\Model|null
      */
     protected function getModelInstance($id)
     {
-        // Un-obfuscate ID.
-        if (! $id || ! $id = Obfuscator)
-        // If we already have an instance of the model, great.
-        if (is_a($id, 'Illuminate\Database\Eloquent\Model')) {
-            return $id;
-        }
+        $className = $this->getModelClassName();
 
-        // If we have an encoded ID, decode it.
-        elseif (! is_numeric($id) && is_string($id) && strlen($id) >= 8) {
-            $className = $this->getModelClassName();
-
-            return $className::find($id);
-        }
-
-        // If the ID was already decoded, this defeats the purpose of obfuscation...
-        // We won't allow it !!
-        elseif (is_numeric($id)) {
-            return null;
-        }
+        return $className::find($id);
     }
 
     /**

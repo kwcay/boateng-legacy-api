@@ -44,5 +44,11 @@ class RouteServiceProvider extends ServiceProvider
             ->middleware('read')
             ->namespace('App\Http\Controllers\v0_4')
             ->group(base_path('routes/0.4.php'));
+
+        // API v0.5
+        Route::prefix('0.5')
+            ->middleware('read')
+            ->namespace('App\Http\Controllers\v0_5')
+            ->group(base_path('routes/0.5.php'));
     }
 }

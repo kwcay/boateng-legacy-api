@@ -42,13 +42,12 @@ class Definition extends Model
     public $embedable = [
         'mainTitle'         => ['titles'],
         'titleString'       => ['titles'],
-        'titleList'         => ['titles'],
         'relatedDefinitionList' => ['relatedDefinitions'],
         'tagList'           => ['tags'],
-        'translationData'   => ['translations'],
-        'allTranslations'   => ['translations'],
-        'mainLanguage'      => ['languages'],
-        'languageList'      => ['languages'],
+        'translationData'   => ['translations'],    // @deprecated
+        'englishTranslation' => ['translations'],
+        'frenchTranslation' => ['translations'],
+        'languageNames'     => ['languages'],
         'referenceList'     => ['translations'],
     ];
 
@@ -86,7 +85,7 @@ class Definition extends Model
         'titleList',
         'tagList',
         'translationData',
-        'languageList',
+        'languageNames',
         'relatedDefinitionList',
     ];
 
@@ -287,12 +286,8 @@ class Definition extends Model
      */
     protected $hidden = [
         'id',
-        'titles',
         'relatedDefinitions',
         'related_definitions',
-        'tags',
-        'languages',
-        'translations',
         'deletedAt',
         'deleted_at',
     ];
@@ -1111,11 +1106,11 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->languageList.
+     * Accessor for $this->languageNames.
      *
      * @return array
      */
-    public function getLanguageListAttribute($list = [])
+    public function getLanguageNamesAttribute($list = [])
     {
         $codes = [];
 

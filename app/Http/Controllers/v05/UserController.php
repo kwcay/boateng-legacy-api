@@ -2,16 +2,16 @@
 /**
  * Copyright Dora Boateng(TM) 2017, all rights reserved.
  *
- * @version 0.4
+ * @version 0.5
  * @brief   Handles user-related API requests.
  */
-namespace App\Http\Controllers\v0_4;
+namespace App\Http\Controllers\v0_5;
 
 use Auth;
 use Request;
 use App\Models\User;
 use App\Http\Requests;
-use App\Http\Controllers\v0_4\Controller;
+use App\Http\Controllers\v0_5\Controller;
 
 class UserController extends Controller
 {
