@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright Dora Boateng(TM) 2016, all rights reserved.
+ * Copyright Dora Boateng(TM) 2017, all rights reserved.
  *
- * @version 0.4
+ * @version 0.5
  * @brief   Handles definition-related API requests.
  */
-namespace App\Http\Controllers\v0_4;
+namespace App\Http\Controllers\v0_5;
 
 use Auth;
 use Lang;
@@ -20,7 +20,7 @@ use App\Models\Definitions\Word;
 use App\Http\Controllers\Controller;
 use App\Models\Definitions\Expression;
 // use Frnkly\ControllerTraits\Embedable;
-use App\Http\Controllers\v0_4\Controller as BaseController;
+use App\Http\Controllers\v0_5\Controller as BaseController;
 
 class DefinitionController extends BaseController
 {

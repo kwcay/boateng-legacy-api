@@ -55,7 +55,7 @@ trait EmbedableTrait
     {
         // Relations and accessors to append.
         $separator  = isset($this->embedSeparator) ? $this->embedSeparator : ',';
-        $attributes = is_string($embed) ? @explode($separator, $embed) : (array) $embed;
+        $attributes = is_string($embed) ? explode($separator, $embed) : (array) $embed;
 
         // Extract the accessors from the list of attributes.
         $embedable  = isset($this->embedable) ? $this->embedable : [];
