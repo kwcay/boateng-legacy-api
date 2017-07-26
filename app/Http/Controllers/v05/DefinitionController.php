@@ -247,13 +247,17 @@ class DefinitionController extends BaseController
             'languages.*'       => 'exists:languages,code',
 
             // Translations
-            'translations'      => 'array',
+            'translations'              => 'array',
+            'translations.*.language'   => 'required|in:eng,esp,fra',
+            'translations.*.practical'  => 'required|string|min:1',
+            'translations.*.literal'    => 'string',
+            'translations.*.meaning'    => 'string',
 
             // Tags
             'tags'              => 'array',
 
             // Related definitions
-            'relatedDefinitionList' => 'array',
+            'related'           => 'array',
         ]);
 
         $type = Definition::getTypeConstant($this->request->get('type'));
@@ -263,22 +267,18 @@ class DefinitionController extends BaseController
             'subType'  => ['required', Rule::in(array_flip(Definition::SUB_TYPES[$type]))],
         ]);
 
-        // TODO: validate titles (array), translationData, tags, ...
+        // TODO: generate state hash to see if this object had any changes made
 
-        dd('ok');
-
-        // Add definition to database.
+        // Update definition
         $definition->fill([
             'type'      => $type,
             'sub_type'  => $this->request->get('subType'),
         ]);
 
-        // TODO: state hash to see if this object had any changes made
-
         // Add contributor
         // TODO: move this to model
         // TODO: order by some kind of authoritative status
-        $authorId   = $this->request->user()->id;
+        $authorId   = $this->request->user()->uniqueId;
         $authors    = isset($definition->meta['authors']) && $definition->meta['authors']
             ? (array) $definition->meta['authors']
             : [];
@@ -287,20 +287,18 @@ class DefinitionController extends BaseController
             $definition->meta = ['authors' => $authors];
         }
 
-        // TODO: edit history
-
         if (! $definition->save()) {
-            return response('Could Not Save Definition.', 500);
+            return response('Could Not Save Definition [1].', 500);
         }
 
-        // Save titles
+        // Update titles
         $oldTitles = $this->request->get('titles');
         $newTitles = [];
+        // TODO
 
-        return $definition;
-
-        // Add language relations.
+        // Update languages
         $languageCodes = $this->request->input('languages');
+
         if (is_array($languageCodes)) {
             $languageIDs = [];
 
@@ -313,18 +311,29 @@ class DefinitionController extends BaseController
             $definition->languages()->sync($languageIDs);
         }
 
-        // Add translation relations.
-        $rawTranslations = $this->request->input('translations');
-        if (is_array($rawTranslations)) {
+        // Update translations
+        if ($this->request->has('translations') || false) {
+            $rawTranslations = $definition->translationData;
+
+            // Overwrite existing translations.
+            foreach ($this->request->get('translations') as $translation) {
+                $rawTranslations[$translation['language']] = $translation;
+            }
+
+            // Create translation records.
             $translations = [];
 
-            foreach ($rawTranslations as $foreign => $data) {
-                $data['language'] = $foreign;
-                $translations[] = new Translation($data);
+            foreach ($rawTranslations as $data) {
+                $translations[] = new Translation(array_only($data));
             }
 
             $definition->translations()->saveMany($translations);
         }
+
+        // Update tags
+        // TODO
+
+        // TODO: Update the history of updates.
 
         return $definition;
     }

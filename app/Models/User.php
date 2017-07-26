@@ -84,9 +84,21 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'id',
+        'uri',
+        'params',
+        'email',
         'password',
         'remember_token',
-        'uri',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    /**
+     * Attributes that SHOULD be appended to the model's array form.
+     */
+    protected $appends = [
+        'uniqueId',
     ];
 
 

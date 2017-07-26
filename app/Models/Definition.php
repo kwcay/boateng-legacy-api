@@ -40,15 +40,16 @@ class Definition extends Model
      * database relations.
      */
     public $embedable = [
-        'mainTitle'         => ['titles'],
+        'mainTitle'         => ['titles'],          // @deprecated since 0.5
         'titleString'       => ['titles'],
         'relatedDefinitionList' => ['relatedDefinitions'],
-        'tagList'           => ['tags'],
-        'translationData'   => ['translations'],    // @deprecated
+        'tagList'           => ['tags'],            // @deprecated since 0.5
+        'translationData'   => ['translations'],    // @deprecated since 0.5
         'englishTranslation' => ['translations'],
         'frenchTranslation' => ['translations'],
         'languageNames'     => ['languages'],
         'referenceList'     => ['translations'],
+        'authors'           => [],
     ];
 
 
@@ -286,6 +287,7 @@ class Definition extends Model
      */
     protected $hidden = [
         'id',
+        'meta',
         'relatedDefinitions',
         'related_definitions',
         'deletedAt',
@@ -1221,14 +1223,12 @@ class Definition extends Model
     {
         $data = [];
 
-        if (count($this->translations)) {
-            foreach ($this->translations as $translation) {
-                $data[$translation->language] = array_only($translation->toArray(), [
-                    'practical',
-                    'literal',
-                    'meaning',
-                ]);
-            }
+        foreach ($this->translations as $translation) {
+            $data[$translation->language] = array_only($translation->toArray(), [
+                'practical',
+                'literal',
+                'meaning',
+            ]);
         }
 
         return $data;
@@ -1251,6 +1251,28 @@ class Definition extends Model
     }
 
     /**
+     * Accessor for authors
+     *
+     * @return array
+     */
+    public function getAuthorsAttribute()
+    {
+        $authors = [];
+
+        if (! $this->meta || empty($this->meta['authors'])) {
+            return $authors;
+        }
+
+        foreach ($this->meta['authors'] as $id) {
+            if ($author = \App\Models\User::find($id)) {
+                $authors[] = $author;
+            }
+        }
+
+        return $authors;
+    }
+
+    /**
      * Accessor for $this->resourceType.
      *
      * @return string
@@ -1268,11 +1290,17 @@ class Definition extends Model
     ////////////////////////////////////////////////////////////////////////////////////////////
 
 
+    /**
+     * @deprecated since 0.5
+     */
     public function setRelationToBeImported($relation, $data)
     {
         $this->relationsToBeImported[$relation] = $data;
     }
 
+    /**
+     * @deprecated since 0.5
+     */
     public function getRelationsToBeImported()
     {
         return $this->relationsToBeImported;
@@ -1281,6 +1309,7 @@ class Definition extends Model
     /**
      * Checks Definition properties before saving to database.
      *
+     * @deprecated since 0.5
      * @param \App\Models\Definition $def
      * @return bool
      */
@@ -1308,6 +1337,7 @@ class Definition extends Model
     /**
      * Tries to import relations when importing a definition.
      *
+     * @deprecated since 0.5
      * @param \App\Models\Definition $def
      * @return bool
      */
@@ -1340,6 +1370,9 @@ class Definition extends Model
         return true;
     }
 
+    /**
+     * @deprecated since 0.5
+     */
     public function updateRelations(array $relations)
     {
         // Performance check.
@@ -1358,6 +1391,7 @@ class Definition extends Model
     /**
      * Updates the language relations.
      *
+     * @deprecated since 0.5
      * @param array $languages
      */
     public function updateLanguageRelation(array $languages)
@@ -1394,6 +1428,7 @@ class Definition extends Model
     /**
      * Updates or creates one or more practical translations.
      *
+     * @deprecated since 0.5
      * @param array $translations
      */
     public function updatePracticalRelation(array $translations)
@@ -1406,6 +1441,7 @@ class Definition extends Model
     /**
      * Updates one or more literal translations in the translation relations.
      *
+     * @deprecated since 0.5
      * @param array $translations
      */
     public function updateLiteralRelation(array $translations)
@@ -1418,6 +1454,7 @@ class Definition extends Model
     /**
      * Updates one or more meanings in the translation relations.
      *
+     * @deprecated since 0.5
      * @param array $translations
      */
     public function updateMeaningRelation(array $meanings)
