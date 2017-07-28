@@ -86,7 +86,6 @@ class User extends Authenticatable
         'id',
         'uri',
         'params',
-        'email',
         'password',
         'remember_token',
         'created_at',
