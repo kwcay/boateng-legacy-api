@@ -3,8 +3,9 @@
  * Copyright Dora Boateng(TM) 2017, all rights reserved.
  */
 
-//
+// Info
 Route::get('/', 'ApiController@version');
+Route::get('/locales', 'ApiController@locales');
 
 // Culture endpoints.
 Route::get('cultures/count',            'CultureController@count');

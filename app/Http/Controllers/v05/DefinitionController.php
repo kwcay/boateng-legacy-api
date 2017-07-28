@@ -14,7 +14,9 @@ use Validator;
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
+use App\Utilities\Locales;
 use App\Models\Translation;
+use App\Models\DefinitionTitle;
 use Illuminate\Validation\Rule;
 use App\Models\Definitions\Word;
 use App\Http\Controllers\Controller;
@@ -191,6 +193,14 @@ class DefinitionController extends BaseController
      */
     public function store()
     {
+        // Validate new definition entries
+        $this->validate($this->request, [
+            'type'          => 'required',
+            'titles'        => 'required',
+            'languages'     => 'required',
+            'translations'  => 'required',
+        ]);
+
         // Instantiate by definition type.
         switch ($this->request->input('type')) {
             case Definition::TYPE_WORD:
@@ -236,19 +246,20 @@ class DefinitionController extends BaseController
     {
         // Validate incoming data
         $this->validate($this->request, [
-            'type'              => ['required', Rule::in(Definition::TYPES)],
+            'type'              => [Rule::in(Definition::TYPES)],
 
             // Titles
-            'titles'            => 'required|array|min:1',
+            'titles'            => 'array|min:1',
             'titles.*.title'    => 'required|string|min:1',
+            'titles.*.script'   => 'string',
 
             // Languages
-            'languages'         => 'required|array|min:1',
+            'languages'         => 'array|min:1',
             'languages.*'       => 'exists:languages,code',
 
             // Translations
             'translations'              => 'array',
-            'translations.*.language'   => 'required|in:eng,esp,fra',
+            'translations.*.language'   => ['required', Rule::in(Locales::allKeys())],
             'translations.*.practical'  => 'required|string|min:1',
             'translations.*.literal'    => 'string',
             'translations.*.meaning'    => 'string',
@@ -260,7 +271,7 @@ class DefinitionController extends BaseController
             'related'           => 'array',
         ]);
 
-        $type = Definition::getTypeConstant($this->request->get('type'));
+        $type = Definition::getTypeConstant($this->request->get('type', $definition->type));
 
         // TODO: find a way to validate everything at once
         $this->validate($this->request, [
@@ -276,30 +287,51 @@ class DefinitionController extends BaseController
         ]);
 
         // Add contributor
-        // TODO: move this to model
-        // TODO: order by some kind of authoritative status
         $authorId   = $this->request->user()->uniqueId;
-        $authors    = isset($definition->meta['authors']) && $definition->meta['authors']
-            ? (array) $definition->meta['authors']
-            : [];
+        $authors    = isset($definition->meta['authors']) ? (array) $definition->meta['authors'] : [];
+
         if (! in_array($authorId, $authors)) {
             $authors[] = $authorId;
             $definition->meta = ['authors' => $authors];
         }
 
+        // Save definition
         if (! $definition->save()) {
             return response('Could Not Save Definition [1].', 500);
         }
 
         // Update titles
-        $oldTitles = $this->request->get('titles');
-        $newTitles = [];
-        // TODO
+        if ($titles = $this->request->get('titles')) {
+            $new        = [];
+            $existing   = [];
+
+            // New titles
+            foreach ($titles as $title) {
+                $title = new DefinitionTitle($title);
+
+                $new[$title->getHash()] = $title;
+            }
+
+            // Existing titles
+            foreach ($definition->titles as $title) {
+                $existing[$title->getHash()] = $title;
+            }
+
+            // Titles to remove
+            if ($titlesToRemove = array_diff_key($existing, $new)) {
+                foreach ($titlesToRemove as $title) {
+                    $title->delete();
+                }
+            }
+
+            // Titles to add
+            if ($titlesToAdd = array_diff_key($new, $existing)) {
+                $definition->titles()->saveMany($titlesToAdd);
+            }
+        }
 
         // Update languages
-        $languageCodes = $this->request->input('languages');
-
-        if (is_array($languageCodes)) {
+        if ($languageCodes = $this->request->input('languages')) {
             $languageIDs = [];
 
             foreach ($languageCodes as $langCode) {
@@ -312,30 +344,27 @@ class DefinitionController extends BaseController
         }
 
         // Update translations
-        if ($this->request->has('translations') || false) {
-            $rawTranslations = $definition->translationData;
-
-            // Overwrite existing translations.
-            foreach ($this->request->get('translations') as $translation) {
-                $rawTranslations[$translation['language']] = $translation;
-            }
-
-            // Create translation records.
+        if ($updatedData = $this->request->get('translations')) {
             $translations = [];
 
-            foreach ($rawTranslations as $data) {
-                $translations[] = new Translation(array_only($data));
+            // Existing translations
+            foreach ($definition->translations as $data) {
+                $translations[$data->language] = $data;
+            }
+
+            // New translations
+            foreach ($updatedData as $data) {
+                $translations[$data['language']] = new Translation($data);
             }
 
             $definition->translations()->saveMany($translations);
         }
 
-        // Update tags
-        // TODO
+        // TODO: Update tags
 
         // TODO: Update the history of updates.
 
-        return $definition;
+        return Definition::find($definition->uniqueId);
     }
 
     /**

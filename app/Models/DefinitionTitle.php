@@ -5,13 +5,14 @@
  */
 namespace App\Models;
 
+use App\Traits\Hashable;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\TransliteratableTrait as Transliteratable;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class DefinitionTitle extends Model
 {
-    use CamelCaseAttrs, Transliteratable;
+    use CamelCaseAttrs, Hashable, Transliteratable;
 
 
     //

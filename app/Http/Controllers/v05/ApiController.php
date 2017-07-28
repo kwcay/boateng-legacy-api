@@ -6,6 +6,7 @@ namespace App\Http\Controllers\v0_5;
 
 use App\Models\Language;
 use App\Models\Definition;
+use App\Utilities\Locales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
@@ -79,5 +80,24 @@ class ApiController extends Controller
         );
 
         return $results;
+    }
+
+    /**
+     * List of supported locales
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function locales()
+    {
+        switch (strtolower(trim($this->request->get('format')))) {
+            case 'iso-639-3':
+                return Locales::SUPPORTED_LANGUAGES;
+
+            case 'combined':
+                return Locales::all();
+
+            default:
+                return Locales::SUPPORTED_LOCALES;
+        }
     }
 }

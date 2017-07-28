@@ -4,6 +4,7 @@
  */
 namespace App\Models;
 
+use App\Traits\Hashable;
 use App\Traits\ValidatableTrait as Validatable;
 use App\Traits\ObfuscatableTrait as Obfuscatable;
 use App\Traits\ExportableTrait as Exportable;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Translation extends Model
 {
-    use Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams;
+    use Hashable, Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams;
 
 
     //
@@ -36,6 +37,7 @@ class Translation extends Model
     protected $hidden = [
         'id',
         'definition_id',
+        'definition',
         'created_at',
         'updated_at',
         'deleted_at'

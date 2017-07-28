@@ -3,7 +3,7 @@
 return [
 
     'name'      => 'Dora Boateng API',
-    'version'   => '0.4',
+    'version'   => '0.5',
     'env'       => env('APP_ENV', 'production'),
     'debug'     => env('APP_DEBUG', false),
     'url'       => env('APP_URL', 'https://api.doraboateng.com'),
@@ -59,7 +59,7 @@ return [
         App\Providers\ObfuscatorServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
-    
+
     'aliases' => [
         'App'           => Illuminate\Support\Facades\App::class,
         'Artisan'       => Illuminate\Support\Facades\Artisan::class,
