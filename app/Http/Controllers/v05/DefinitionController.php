@@ -280,6 +280,9 @@ class DefinitionController extends BaseController
 
         // TODO: generate state hash to see if this object had any changes made
 
+        // TODO: wrap everything in a transaction ?
+        // https://laravel.com/docs/5.4/database#database-transactions
+
         // Update definition
         $definition->fill([
             'type'      => $type,

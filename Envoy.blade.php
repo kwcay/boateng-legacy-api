@@ -156,6 +156,7 @@
     # Make sure the persistent storage directory exists.
     #[ -d {{ $baseDir }}/storage ] || mkdir -p {{ $baseDir }}/storage;
     mkdir -p {{ $baseDir }}/storage/app;
+    mkdir -p {{ $baseDir }}/storage/backups;
     mkdir -p {{ $baseDir }}/storage/framework/sessions;
     mkdir -p {{ $baseDir }}/storage/framework/views;
     mkdir -p {{ $baseDir }}/storage/logs;

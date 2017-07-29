@@ -13,9 +13,9 @@ use App\Factories\BackupFactory;
 trait FileTrait
 {
     /**
-     * @var $storage
+     * @var $store
      */
-    protected $storage;
+    protected $store;
 
     /**
      * Retrieves a filename from the cli
@@ -24,7 +24,7 @@ trait FileTrait
      */
     protected function getFilenameFromAgrs()
     {
-        if (! $this->storage) {
+        if (! $this->store) {
             $this->error('Invalid storage setup');
 
             return null;
@@ -35,12 +35,12 @@ trait FileTrait
 
         // List available files on cli.
         if (empty($filename)) {
-            $files = array_reverse($this->storage->allFiles('/'));
+            $files = array_reverse($this->store->allFiles('/'));
             $filename = $this->choice('Select a file:', $files, 0);
         }
 
         // Performance check.
-        if (! $this->storage->exists($filename)) {
+        if (! $this->store->exists($filename)) {
             $this->error('Can\'t find file "'.$filename.'".');
 
             return null;
@@ -74,5 +74,42 @@ trait FileTrait
         // ...
 
         return null;
+    }
+
+    /**
+     * Creates a unique filename.
+     *
+     * @param  string $prefix
+     * @return string
+     */
+    public function generateFileName($prefix)
+    {
+        return $prefix.'_'.gmdate('ymd').'-'.substr(time(), -5).'-'.substr(md5(microtime()), -3);
+    }
+
+    /**
+     * Creates a GZ-compressed file on disk.
+     *
+     * @param  string  $path
+     * @param  string  $filename
+     * @param  string  $contents
+     * @return int|false
+     */
+    public function compressTo($path, $filename, $contents)
+    {
+        if (! $this->store) {
+            $this->error('Invalid storage setup');
+
+            return false;
+        }
+
+        // Make sure base directory exists
+        if (! $this->store->makeDirectory($path, 0755, true)) {
+            $this->error('Could not create storage directory.');
+
+            return false;
+        }
+
+        return $this->store->put($path.'/'.$filename.'.gz', gzcompress($contents));
     }
 }
