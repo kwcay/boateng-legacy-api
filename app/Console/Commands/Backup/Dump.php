@@ -8,6 +8,7 @@ use Storage;
 use Illuminate\Console\Command;
 use App\Console\Traits\FileTrait;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Dump extends Command
@@ -76,11 +77,23 @@ class Dump extends Command
 
         $this->comment('No tables specified, backing up all tables.');
 
+        // Run command
         $this->info('Running backup...');
 
-        $process = new Process($this->command);
+        $input      = new InputStream;
+        $process    = new Process($this->command);
 
-        if ($process->run() !== 0) {
+        $process->setInput($input);
+        $process->start();
+
+        // Use an input stream to avoid writing the password in the console
+        $input->write($password);
+        $input->close();
+
+        // Wait for the command to run
+        $process->wait();
+
+        if ($process->getExitCode() !== 0) {
             throw new ProcessFailedException($process);
         }
 
