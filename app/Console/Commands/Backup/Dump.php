@@ -26,6 +26,7 @@ class Dump extends Command
      * @var string
      */
     protected $signature = 'backup:dump
+                            {--force : force execution even if config is disabled}
                             {--default-character-set=UTF8}
                             {--no-create-db=1}
                             {--set-charset=1}
@@ -58,6 +59,10 @@ class Dump extends Command
      */
     public function handle()
     {
+        if (! $this->shouldRun() && ! $this->option('force')) {
+            return $this->comment('SQL dumps disabled, exiting.');
+        }
+
         $host       = env('DB_HOST');
         $port       = env('DB_PORT');
         $user       = env('DB_USERNAME');
@@ -79,6 +84,9 @@ class Dump extends Command
 
         // Run command
         $this->info('Running backup...');
+
+        $this->info($this->command);
+        $this->info($password);
 
         $input      = new InputStream;
         $process    = new Process($this->command);
@@ -111,6 +119,11 @@ class Dump extends Command
         $this->info('Done.');
     }
 
+    public function isEnabled()
+    {
+        return true;
+    }
+
     /**
      * @param  string $option
      * @param  bool   $hasValue
@@ -120,5 +133,13 @@ class Dump extends Command
         if ($value = $this->option($option)) {
             $this->command .= ' --'.$option.($hasValue ? '="'.$value.'"' : '');
         }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function shouldRun()
+    {
+        return (bool) config('app.backups.sql-dump');
     }
 }
