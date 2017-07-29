@@ -13,11 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        // Commands\Backup::class,
         Commands\Backup\Dump::class,
-        Commands\Backup\ListCommand::class,
-        Commands\Backup\Meta::class,
-        Commands\Backup\Restore::class,
     ];
 
     /**
@@ -29,7 +25,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // Database backups
-        $schedule->command(Commands\Backup\Dump::class)->dailyAt('02:00');
+        $schedule
+            ->command(Commands\Backup\Dump::class)
+            ->dailyAt('02:00')
+            ->evenInMaintenanceMode();
 
         // Test
         $schedule->command(Commands\Backup\Dump::class)->everyMinute();
