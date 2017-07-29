@@ -25,12 +25,7 @@ class Dump extends Command
      * @var string
      */
     protected $signature = 'backup:dump
-                            {--force : force execution even if config is disabled}
-                            {--default-character-set=UTF8}
-                            {--no-create-db=1}
-                            {--set-charset=1}
-                            {--extended-insert=1}
-                            {--skip-lock-tables=1}';
+                            {--force : force execution even if config is disabled}';
 
     /**
      * The console command description.
@@ -38,11 +33,6 @@ class Dump extends Command
      * @var string
      */
     protected $description = 'Dumps MySQL tables to file.';
-
-    /**
-     * Command format: host, port, user, password
-     */
-    protected $command = 'mysqldump --host=%s --port=%u --user=%s --password';
 
     /**
      * Execute the console command.
@@ -71,11 +61,10 @@ class Dump extends Command
         // Build command
         $builder = ProcessBuilder::create()
             ->setPrefix('mysqldump')
-            ->setInput($password."\n")
             ->add(sprintf('--host=%s', $host))
             ->add(sprintf('--port=%u', $port))
             ->add(sprintf('--user=%s', $user))
-            ->add('--password')
+            ->add(sprintf('--password=%s', $password))
             ->add(sprintf('--default-character-set=%s', $charset))
             ->add('--no-create-db')
             ->add('--set-charset')
@@ -83,7 +72,7 @@ class Dump extends Command
             ->add('--skip-lock-tables')
             ->add($database);
 
-        $process = $builder->getProcess()->setTty(true);
+        $process = $builder->getProcess();
 
         $this->comment('No tables specified, backing up all tables.');
 
@@ -107,23 +96,6 @@ class Dump extends Command
         $this->comment('TODO: keep last 50 backups, remove anything else.');
 
         $this->info('Done.');
-    }
-
-    public function isEnabled()
-    {
-        return true;
-    }
-
-    /**
-     * @param  string $option
-     * @param  bool   $hasValue
-     * @param  string $default
-     */
-    protected function addDumpOption($option, $hasValue = false, $default = '')
-    {
-        if ($value = $this->option($option)) {
-            $this->command .= ' --'.$option.($hasValue ? '="'.$value.'"' : '');
-        }
     }
 
     /**
