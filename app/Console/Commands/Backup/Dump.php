@@ -42,7 +42,7 @@ class Dump extends Command
     /**
      * Command format: host, port, user, password
      */
-    protected $command = 'mysqldump --host=%s --port=%u --user=%s --password="%s"';
+    protected $command = 'mysqldump --host=%s --port=%u --user=%s';
 
     public function __construct()
     {
@@ -65,7 +65,7 @@ class Dump extends Command
         $database   = env('DB_DATABASE');
 
         // Build command
-        $this->command = sprintf($this->command, $host, $port, $user, $password);
+        $this->command = sprintf($this->command, $host, $port, $user);
 
         $this->addDumpOption('default-character-set', true);
         $this->addDumpOption('no-create-db');
