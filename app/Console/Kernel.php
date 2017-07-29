@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\Backup\Dump::class,
+        Commands\Backup\Raw\Dump::class,
+        Commands\Backup\Raw\Load::class,
     ];
 
     /**
@@ -26,7 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // Database backups
         $schedule
-            ->command(Commands\Backup\Dump::class)
+            ->command(Commands\Backup\Raw\Dump::class)
             ->dailyAt('02:00')
             ->evenInMaintenanceMode();
     }

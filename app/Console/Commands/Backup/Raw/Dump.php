@@ -2,29 +2,19 @@
 /**
  * Copyright Dora Boateng(TM) 2017, all rights reserved.
  */
-namespace App\Console\Commands\Backup;
+namespace App\Console\Commands\Backup\Raw;
 
-use Storage;
-use Illuminate\Console\Command;
-use App\Console\Traits\FileTrait;
 use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class Dump extends Command
+class Dump extends BaseCommand
 {
-    use FileTrait;
-
-    /**
-     * @const string
-     */
-    const PATH = 'dumps';
-
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'backup:dump
+    protected $signature = 'backup:raw-dump
                             {--force : force execution even if config is disabled}';
 
     /**
@@ -84,8 +74,7 @@ class Dump extends Command
         }
 
         // Dump to file
-        $this->store    = Storage::disk('backups');
-        $filename       = $this->generateFileName('DoraBoatengDump').'.sql';
+        $filename = $this->generateFileName('DoraBoatengDump').'.sql';
 
         $this->info('Dumping to "'.$filename.'"...');
 

@@ -17,6 +17,11 @@ return [
     'backups'   => [
         'sql-dump'  => true,
     ],
+    'automation' => [
+        'production-server' => env('ENVOY_PRODUCTION_SERVER'),
+        'local-server'      => env('ENVOY_LOCAL_SERVER'),
+        'live-directory'    => env('ENVOY_LIVE_DIR'),
+    ],
     'providers' => [
 
         /*
