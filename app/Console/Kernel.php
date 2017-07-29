@@ -28,8 +28,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        // Database backups
+        $schedule->command(Commands\Backup\Dump::class)->dailyAt('02:00');
     }
 
     /**
