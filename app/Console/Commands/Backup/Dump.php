@@ -56,11 +56,14 @@ class Dump extends Command
             return $this->comment('SQL dumps disabled, exiting.');
         }
 
-        $host       = env('DB_HOST');
-        $port       = env('DB_PORT');
-        $user       = env('DB_USERNAME');
-        $password   = env('DB_PASSWORD');
-        $database   = env('DB_DATABASE');
+        $host       = config('database.connections.mysql.host');
+        $port       = config('database.connections.mysql.port');
+        $user       = config('database.connections.mysql.username');
+        $password   = config('database.connections.mysql.password');
+        $database   = config('database.connections.mysql.database');
+
+        // TODO: use this default charset instead of UTF8
+        $charset    = config('database.connections.mysql.charset');
 
         if (! $host || ! $port || ! $user || ! $password || ! $database) {
             return $this->error('Invalid database parameters.');
@@ -69,7 +72,7 @@ class Dump extends Command
         // Build command
         $this->command = sprintf($this->command, $host, $port, $user);
 
-        $this->addDumpOption('default-character-set', true);
+        $this->addDumpOption('default-character-set', true, $charset);
         $this->addDumpOption('no-create-db');
         $this->addDumpOption('set-charset');
         $this->addDumpOption('extended-insert');
@@ -81,9 +84,6 @@ class Dump extends Command
 
         // Run command
         $this->info('Running backup...');
-
-        $this->info($this->command);
-        $this->info($password);
 
         $input      = new InputStream;
         $process    = new Process($this->command);
@@ -125,8 +125,9 @@ class Dump extends Command
     /**
      * @param  string $option
      * @param  bool   $hasValue
+     * @param  string $default
      */
-    protected function addDumpOption($option, $hasValue = false)
+    protected function addDumpOption($option, $hasValue = false, $default = '')
     {
         if ($value = $this->option($option)) {
             $this->command .= ' --'.$option.($hasValue ? '="'.$value.'"' : '');
