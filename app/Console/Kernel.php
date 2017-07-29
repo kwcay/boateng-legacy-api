@@ -29,9 +29,6 @@ class Kernel extends ConsoleKernel
             ->command(Commands\Backup\Dump::class)
             ->dailyAt('02:00')
             ->evenInMaintenanceMode();
-
-        // Test
-        $schedule->command(Commands\Backup\Dump::class)->everyMinute();
     }
 
     /**
