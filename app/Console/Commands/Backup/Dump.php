@@ -45,13 +45,6 @@ class Dump extends Command
      */
     protected $command = 'mysqldump --host=%s --port=%u --user=%s';
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->store = Storage::disk('backups');
-    }
-
     /**
      * Execute the console command.
      *
@@ -68,6 +61,10 @@ class Dump extends Command
         $user       = env('DB_USERNAME');
         $password   = env('DB_PASSWORD');
         $database   = env('DB_DATABASE');
+
+        if (! $host || ! $port || ! $user || ! $password || ! $database) {
+            return $this->error('Invalid database parameters.');
+        }
 
         // Build command
         $this->command = sprintf($this->command, $host, $port, $user);
@@ -106,7 +103,8 @@ class Dump extends Command
         }
 
         // Dump to file
-        $filename = $this->generateFileName('DoraBoatengDump').'.sql';
+        $this->store    = Storage::disk('backups');
+        $filename       = $this->generateFileName('DoraBoatengDump').'.sql';
 
         $this->info('Dumping to "'.$filename.'"...');
 
