@@ -7,7 +7,7 @@ namespace App\Console\Commands\Backup;
 use Storage;
 use Illuminate\Console\Command;
 use App\Console\Traits\FileTrait;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Dump extends Command
@@ -42,7 +42,7 @@ class Dump extends Command
     /**
      * Command format: host, port, user, password
      */
-    protected $command = 'mysqldump --host=%s --port=%u --user=%s --password="%s"';
+    protected $command = 'mysqldump --host=%s --port=%u --user=%s --password';
 
     /**
      * Execute the console command.
@@ -62,29 +62,33 @@ class Dump extends Command
         $database   = config('database.connections.mysql.database');
 
         // TODO: use this default charset instead of UTF8
-        $charset    = config('database.connections.mysql.charset');
+        $charset    = config('database.connections.mysql.charset', 'UTF8');
 
         if (! $host || ! $port || ! $user || ! $password || ! $database) {
             return $this->error('Invalid database parameters.');
         }
 
         // Build command
-        $this->command = sprintf($this->command, $host, $port, $user, $password);
+        $builder = ProcessBuilder::create()
+            ->setPrefix('mysqldump')
+            ->setInput($password."\n")
+            ->add(sprintf('--host=%s', $host))
+            ->add(sprintf('--port=%u', $port))
+            ->add(sprintf('--user=%s', $user))
+            ->add('--password')
+            ->add(sprintf('--default-character-set=%s', $charset))
+            ->add('--no-create-db')
+            ->add('--set-charset')
+            ->add('--extended-insert')
+            ->add('--skip-lock-tables')
+            ->add($database);
 
-        $this->addDumpOption('default-character-set', true, $charset);
-        $this->addDumpOption('no-create-db');
-        $this->addDumpOption('set-charset');
-        $this->addDumpOption('extended-insert');
-        $this->addDumpOption('skip-lock-tables');
-
-        $this->command .= ' '.$database;
+        $process = $builder->getProcess()->setTty(true);
 
         $this->comment('No tables specified, backing up all tables.');
 
         // Run command
         $this->info('Running backup...');
-
-        $process = new Process($this->command);
 
         if ($process->run() !== 0) {
             throw new ProcessFailedException($process);
