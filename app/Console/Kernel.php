@@ -30,6 +30,9 @@ class Kernel extends ConsoleKernel
     {
         // Database backups
         $schedule->command(Commands\Backup\Dump::class)->dailyAt('02:00');
+
+        // Test
+        $schedule->command(Commands\Backup\Dump::class)->everyMinute();
     }
 
     /**
