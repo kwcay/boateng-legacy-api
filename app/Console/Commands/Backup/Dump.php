@@ -8,7 +8,6 @@ use Storage;
 use Illuminate\Console\Command;
 use App\Console\Traits\FileTrait;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Dump extends Command
@@ -43,7 +42,7 @@ class Dump extends Command
     /**
      * Command format: host, port, user, password
      */
-    protected $command = 'mysqldump --host=%s --port=%u --user=%s';
+    protected $command = 'mysqldump --host=%s --port=%u --user=%s --password="%s"';
 
     /**
      * Execute the console command.
@@ -70,7 +69,7 @@ class Dump extends Command
         }
 
         // Build command
-        $this->command = sprintf($this->command, $host, $port, $user);
+        $this->command = sprintf($this->command, $host, $port, $user, $password);
 
         $this->addDumpOption('default-character-set', true, $charset);
         $this->addDumpOption('no-create-db');
@@ -85,20 +84,9 @@ class Dump extends Command
         // Run command
         $this->info('Running backup...');
 
-        $input      = new InputStream;
-        $process    = new Process($this->command);
+        $process = new Process($this->command);
 
-        $process->setInput($input);
-        $process->start();
-
-        // Use an input stream to avoid writing the password in the console
-        $input->write($password);
-        $input->close();
-
-        // Wait for the command to run
-        $process->wait();
-
-        if ($process->getExitCode() !== 0) {
+        if ($process->run() !== 0) {
             throw new ProcessFailedException($process);
         }
 
