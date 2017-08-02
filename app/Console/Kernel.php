@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\Backup\Raw\Dump::class,
-        Commands\Backup\Raw\Load::class,
+        Commands\Backup\Raw\Sync::class,
     ];
 
     /**

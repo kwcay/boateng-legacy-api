@@ -347,20 +347,32 @@ class DefinitionController extends BaseController
         }
 
         // Update translations
-        if ($updatedData = $this->request->get('translations')) {
-            $translations = [];
+        if ($translations = $this->request->get('translations')) {
+            $new        = [];
+            $existing   = [];
+
+            // New translations
+            foreach ($translations as $data) {
+                $new[$data['language']] = new Translation($data);
+            }
 
             // Existing translations
             foreach ($definition->translations as $data) {
-                $translations[$data->language] = $data;
+                $existing[$data->language] = $data;
             }
 
-            // New translations
-            foreach ($updatedData as $data) {
-                $translations[$data['language']] = new Translation($data);
+            // Translations to remove
+            if ($translationsToRemove = array_intersect_key($existing, $new)) {
+                foreach ($translationsToRemove as $translation) {
+                    // TODO: only remove if new translation is different.
+                    $translation->delete();
+                }
             }
 
-            $definition->translations()->saveMany($translations);
+            // Translations to add
+            if ($translationsToAdd = array_diff_key($new, $existing)) {
+                $definition->translations()->saveMany($translationsToAdd);
+            }
         }
 
         // TODO: Update tags

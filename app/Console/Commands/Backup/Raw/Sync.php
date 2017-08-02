@@ -7,21 +7,21 @@ namespace App\Console\Commands\Backup\Raw;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class Load extends BaseCommand
+class Sync extends BaseCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'backup:raw-load';
+    protected $signature = 'backup:sync';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Loads a MySQL dump file into the database.';
+    protected $description = 'Loads the latest available raw production data into the local database.';
 
     /**
      * Execute the console command.
@@ -61,8 +61,10 @@ class Load extends BaseCommand
             return $this->error('Could not read backup file.');
         }
 
-        $sql = gzuncompress($data);
+        $this->store->put(static::PATH.'/raw-dump.sql', gzuncompress($data));
 
-        $this->info('SQL length: '.strlen($sql));
+        $this->info('Loading backup file...');
+
+        $this->comment('TODO: confirm before overwriting everything... since all tables will be reloaded.');
     }
 }

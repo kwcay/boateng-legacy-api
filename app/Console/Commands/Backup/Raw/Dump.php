@@ -10,6 +10,13 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 class Dump extends BaseCommand
 {
     /**
+     * The number of backup files to keep.
+     *
+     * @const int
+     */
+    const NUM_BACKUPS = 90;
+
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -40,8 +47,6 @@ class Dump extends BaseCommand
         $user       = config('database.connections.mysql.username');
         $password   = config('database.connections.mysql.password');
         $database   = config('database.connections.mysql.database');
-
-        // TODO: use this default charset instead of UTF8
         $charset    = config('database.connections.mysql.charset', 'UTF8');
 
         if (! $host || ! $port || ! $user || ! $password || ! $database) {
@@ -82,7 +87,19 @@ class Dump extends BaseCommand
             return $this->error('Backup failed.');
         }
 
-        $this->comment('TODO: keep last 50 backups, remove anything else.');
+        // Remove excess backup files.
+        $files      = $this->store->files(static::PATH);
+        $numFiles   = count($files);
+
+        if ($numFiles <= static::NUM_BACKUPS) {
+            $this->comment($numFiles.' is under the backup limit of '.static::NUM_BACKUPS.' files, keeping them all.');
+        } else {
+            $remove = array_slice($files, 0, $numFiles - static::NUM_BACKUPS);
+
+            $this->info('Removing '.count($remove).' backup files...');
+
+            $this->store->delete($remove);
+        }
 
         $this->info('Done.');
     }
