@@ -125,7 +125,7 @@ abstract class Controller extends BaseController
 
         if (count($queryParams)) {
             foreach ($queryParams as $param) {
-                $paginator->appends($param, $this->getParam($param));
+                $paginator->appends($param, $this->request->get($param));
             }
         }
 
@@ -351,6 +351,12 @@ abstract class Controller extends BaseController
         $className = $this->getModelClassName();
 
         return $this->request->only(array_flip((new $className)->validationRules));
+    }
+
+    protected function error($message, $statusCode)
+    {
+        // TODO: use $this->response or don't even inject it in the constructor
+
     }
 
     /**

@@ -21,7 +21,6 @@ use Illuminate\Validation\Rule;
 use App\Models\Definitions\Word;
 use App\Http\Controllers\Controller;
 use App\Models\Definitions\Expression;
-// use Frnkly\ControllerTraits\Embedable;
 use App\Http\Controllers\v0_5\Controller as BaseController;
 
 class DefinitionController extends BaseController
@@ -46,7 +45,7 @@ class DefinitionController extends BaseController
      */
     public function index()
     {
-        $langCode = Language::sanitizeCode($this->request->get('lang'));
+        $langCode = Language::sanitizeCode($this->request->get('language'));
 
         // Only allow index for a specified language.
         if (! $langCode) {
@@ -56,7 +55,7 @@ class DefinitionController extends BaseController
         // TODO: restrict by language.
         // ...
 
-        return $this->indexFromBuilder(Definition::query(), ['lang']);
+        return $this->indexFromBuilder(Definition::query(), ['language']);
     }
 
     /**
@@ -296,6 +295,13 @@ class DefinitionController extends BaseController
         if (! in_array($authorId, $authors)) {
             $authors[] = $authorId;
             $definition->meta = ['authors' => $authors];
+        }
+
+        // Main language code
+        // TODO: deprecated
+        if (! $definition->exists) {
+            $definition->setAttribute('rating', 1);
+            $definition->setAttribute('main_language_code', array_first($this->request->input('languages')));
         }
 
         // Save definition
