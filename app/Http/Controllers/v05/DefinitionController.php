@@ -397,8 +397,12 @@ class DefinitionController extends BaseController
      */
     public function destroy($id)
     {
-        // TODO ...
+        if (! $definition = Definition::find($id)) {
+            return response('Definition does not exist.', 204);
+        }
 
-        return response('Not Implemented.', 501);
+        // TODO: confirm that relations are also deleted.
+
+        return $definition->delete() ? response('Deleted', 200) : response('Not deleted', 500);
     }
 }
