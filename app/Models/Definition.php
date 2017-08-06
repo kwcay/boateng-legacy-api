@@ -665,7 +665,7 @@ class Definition extends Model
 
         // Limit scope to certain tags
         if (isset($options['tags']) && count($options['tags'])) {
-            $tagIds = Tag::whereIn('title', $options['tags'])->lists('id');
+            $tagIds = Tag::whereIn('title', $options['tags'])->pluck('id');
 
             $builder->join('definition_tag AS tag_pivot', 'tag_pivot.definition_id', '=', 'd.id')
                 ->whereIn('tag_pivot.tag_id', $tagIds);
