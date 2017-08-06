@@ -38,8 +38,8 @@
 
 @story('deploy')
 
-    test-code
-    test-git
+    unit-tests
+    check-prod
     git-clone
     setup-app
     composer-install
@@ -71,26 +71,23 @@
 
 @endtask
 
+@task('unit-tests', ['on' => 'local'])
 
-
-@task('test-code', ['on' => 'local'])
-
-    {{ App\Utilities\Cli::lightBlue('Running unit tests...') }}
-    {{ App\Utilities\Cli::lightGray('To do: run tests from Envoy and quit on fail') }}
+    {{ App\Utilities\Cli::green('Running unit tests...') }}
+    {{ App\Utilities\Cli::yellow('To do: run tests from Envoy and quit on fail') }}
 
 @endtask
 
-@task('test-git', ['on' => 'production'])
+@task('check-prod', ['on' => 'production'])
 
-    {{ App\Utilities\Cli::yellow('Testing Git...') }}
-    {{ 'ssh -T git@'.$gitHost }}
-    {{ App\Utilities\Cli::lightGreen('Git is good to go.') }}
+    {{ App\Utilities\Cli::green('Checking production server...') }}
+    ssh -T git@<?= $gitHost ?>
 
 @endtask
 
 @task('git-clone', ['on' => 'production'])
 
-    {{ App\Utilities\Cli::yellow('Cloning git repository...') }}
+    {{ App\Utilities\Cli::green('Cloning git repository...') }}
 
     # Check if the release directory exists. If it doesn't, create one.
     [ -d {{ $releasesDir }} ] || mkdir -p {{ $releasesDir }};
@@ -112,7 +109,7 @@
 
 @task('setup-app', ['on' => 'production'])
 
-    {{ App\Utilities\Cli::yellow('Creating environment file...') }}
+    {{ App\Utilities\Cli::green('Copying environment file...') }}
 
     # cd into new folder.
     cd {{ $releasesDir }}/{{ $newReleaseName }};
@@ -124,20 +121,19 @@
 
 @task('composer-install', ['on' => 'production'])
 
-    {{ App\Utilities\Cli::yellow('Installing composer dependencies...') }}
+    {{ App\Utilities\Cli::green('Installing composer dependencies...') }}
 
     # cd into new folder.
     cd {{ $releasesDir }}/{{ $newReleaseName }};
 
     # Install composer dependencies.
-    composer self-update &> /dev/null;
     composer install --prefer-dist --no-scripts --no-dev -q -o;
 
 @endtask
 
 @task('update-permissions', ['on' => 'production'])
 
-    {{ App\Utilities\Cli::yellow('Updating directory owner and permissions...') }}
+    {{ App\Utilities\Cli::green('Updating directory owner and permissions...') }}
 
     # cd into releases folder
     cd {{ $releasesDir }};
@@ -151,7 +147,7 @@
 
 @task('update-symlinks', ['on' => 'production'])
 
-    {{ App\Utilities\Cli::yellow('Updating symbolic links...') }}
+    {{ App\Utilities\Cli::green('Updating symbolic links...') }}
 
     # Make sure the persistent storage directory exists.
     #[ -d {{ $baseDir }}/storage ] || mkdir -p {{ $baseDir }}/storage;
@@ -174,7 +170,7 @@
 
 @task('optimize', ['on' => 'production'])
 
-    {{ App\Utilities\Cli::yellow('Optimizing...') }}
+    {{ App\Utilities\Cli::green('Optimizing...') }}
 
     cd {{ $liveDir }};
 
@@ -183,54 +179,19 @@
     php artisan clear-compiled;
     php artisan optimize;
     php artisan config:cache;
+
+    {{ App\Utilities\Cli::yellow('Todo: cache routes') }}
     # php artisan route:cache;
 
     # Clear the OPCache
     # sudo service php5-fpm restart
-
-@endtask
-
-@task('down', ['on' => 'production'])
-
-    {{ App\Utilities\Cli::yellow('Putting app in maintenance mode...') }}
-
-    cd {{ $liveDir }} && php artisan down;
-
-@endtask
-
-@task('migrate', ['on' => 'production'])
-
-    {{ App\Utilities\Cli::yellow('Running migrations...') }}
-
-    cd {{ $liveDir }} && php artisan migrate --force;
-
-@endtask
-
-@task('rollback', ['on' => 'production'])
-
-    {{ App\Utilities\Cli::yellow('Rolling back last migration...') }}
-
-    cd {{ $liveDir }} && php artisan migrate:rollback --force;
-
-@endtask
-
-@task('refresh', ['on' => 'production'])
-
-    {{ App\Utilities\Cli::yellow('Refreshing database migrations...') }}
-
-    cd {{ $liveDir }} && php artisan migrate:refresh --force;
-
-@endtask
-
-@task('up', ['on' => 'production'])
-
-    cd {{ $liveDir }} && php artisan up;
+    {{ App\Utilities\Cli::yellow('Todo: clear OPCache') }}
 
 @endtask
 
 @task('purge-releases', ['on' => 'production'])
 
-    {{ App\Utilities\Cli::yellow('Purging old releases...') }}
+    {{ App\Utilities\Cli::green('Purging old releases...') }}
 
     # This will list our releases by modification time and delete all but the 5 most recent.
     purging=$(ls -dt {{ $releasesDir }}/* | tail -n +5);
@@ -241,17 +202,6 @@
     else
         echo "No releases found for purging at this time";
     fi
-
-@endtask
-
-@task('backup', ['on' => 'production'])
-
-    {{ App\Utilities\Cli::yellow('Creating backup...') }}
-
-    cd {{ $liveDir }};
-
-    # Run backup command.
-    php artisan backup
 
 @endtask
 
@@ -302,12 +252,5 @@
     {{ App\Utilities\Cli::lightCyan('Light cyan') }}
 
     pwd
-
-@endtask
-
-@task('test-prod', ['on' => 'production'])
-
-    {{ App\Utilities\Cli::yellow('Testing Envoy on production server...') }}
-    ssh -T git@<?= $gitHost ?>
 
 @endtask
