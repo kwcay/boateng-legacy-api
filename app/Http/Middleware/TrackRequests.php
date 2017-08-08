@@ -29,6 +29,8 @@ class TrackRequests
      */
     public function handle($request, Closure $next)
     {
+        $response = $next($request);
+
         // Track all request attempts
         $version    = substr($request->path(), 0, strpos($request->path(), '/'));
         $params     = [];
@@ -51,11 +53,12 @@ class TrackRequests
             'user'          => $request->user() ? $request->user()->uniqueId : '',
         ]);
 
-        return $next($request);
+        return $response;
     }
 
     public function terminate($request, $response)
     {
-        // Store the session data...
+        // Store the session data
+        $this->tracker->persist();
     }
 }

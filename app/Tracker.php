@@ -29,8 +29,10 @@ class Tracker
     public function __construct($projectId, $masterKey, $writeKey, $readKey)
     {
         $this->keen = KeenIOClient::factory([
-            'projectId' => config('services.keen.id'),
-            'writeKey'  => config('services.keen.write'),
+            'projectId' => $projectId,
+            'masterKey' => $masterKey,
+            'writeKey'  => $writeKey,
+            'readKey'   => $readKey,
         ]);
     }
 
@@ -39,14 +41,29 @@ class Tracker
      *
      * @param  string $event
      * @param  array  $parameters
-     * @return bool
+     * @return static
      */
     public function addEvent($event, array $parameters = [])
     {
-        $this->trackedEvents[$event][99] = $parameters;
+        $this->trackedEvents[$event][] = $parameters;
 
-        dd($this->trackedEvents);
+        return $this;
+    }
 
-        return true;
+    /**
+     * Saves event data.
+     *
+     * @return void
+     */
+    public function persist()
+    {
+        if (! $this->trackedEvents) {
+            return;
+        }
+
+        // For debug
+        file_put_contents(storage_path('tracker.json'), json_encode($this->trackedEvents));
+
+        $this->tracker->addEvents($this->trackedEvents);
     }
 }
