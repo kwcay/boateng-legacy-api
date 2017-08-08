@@ -51,7 +51,10 @@ class TrackRequests
             'input'         => array_merge($params, $request->toArray()),
             'fingerprint'   => $request->fingerprint(),
             'user'          => $request->user() ? $request->user()->uniqueId : '',
+            'ip'            => $request->ip(),
         ]);
+
+        // TODO: track API user, API client, grant type, IP, headers
 
         return $response;
     }

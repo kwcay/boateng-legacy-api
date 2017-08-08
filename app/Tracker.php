@@ -18,7 +18,7 @@ class Tracker
     /**
      * @var array
      */
-    private $tackedEvents = [];
+    private $trackedEvents = [];
 
     /**
      * @param string $projectId
@@ -60,9 +60,6 @@ class Tracker
         if (! $this->trackedEvents) {
             return;
         }
-
-        // For debug
-        file_put_contents(storage_path('tracker.json'), json_encode($this->trackedEvents));
 
         $this->tracker->addEvents($this->trackedEvents);
     }
