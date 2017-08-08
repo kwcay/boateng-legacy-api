@@ -43,7 +43,7 @@ class TrackRequests
             $endpoint   = rtrim(str_replace($version, '', substr($endpoint, 0, strpos($endpoint, '{'))), '/');
         }
 
-        $this->tracker->addEvent('access', [
+        $this->tracker->addEvent('request', [
             'method'        => $request->method(),
             'root'          => $request->root(),
             'version'       => $version,

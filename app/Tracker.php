@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Storage;
 use KeenIO\Client\KeenIOClient;
 
 /**
@@ -61,6 +62,15 @@ class Tracker
             return;
         }
 
-        $this->tracker->addEvents($this->trackedEvents);
+        try {
+            $result = $this->keen->addEvents($this->trackedEvents);
+        } catch (\Exception $e) {
+            $result = $e->getMessage();
+        } catch (\Throwable $t) {
+            $result = $t->getMessage();
+        }
+
+        // For debugging
+        Storage::put('tracker.json', json_encode($result));
     }
 }
