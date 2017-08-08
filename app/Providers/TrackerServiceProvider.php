@@ -34,9 +34,9 @@ class TrackerServiceProvider extends ServiceProvider
         $this->app->singleton('App\Tracker', function($app) {
             return new Tracker(
                 config('services.keen.id'),
-                '',
+                config('services.keen.master'),
                 config('services.keen.write'),
-                ''
+                config('services.keen.read')
             );
         });
     }
