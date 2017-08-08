@@ -66,6 +66,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\ObfuscatorServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\TrackerServiceProvider::class,
     ],
 
     'aliases' => [

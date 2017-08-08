@@ -17,9 +17,10 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
-        \App\Http\Middleware\CamelCaseRequest::class,
-        \App\Http\Middleware\UnobfuscateClientId::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\CamelCaseRequest::class,
+        \App\Http\Middleware\TrackRequests::class,
+        \App\Http\Middleware\UnobfuscateClientId::class,
     ];
 
     /**

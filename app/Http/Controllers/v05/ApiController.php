@@ -7,17 +7,11 @@ namespace App\Http\Controllers\v0_5;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Utilities\Locales;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
 
 class ApiController extends Controller
 {
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
     /**
      * Returns the version number of the API.
      */

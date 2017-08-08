@@ -34,23 +34,6 @@ abstract class Controller extends BaseController
     protected $defaultOrderDirection = 'desc';
 
     /**
-     * @param  Illuminate\Http\Request $request
-     * @param  Illuminate\Http\Response $response
-     * @return void
-     */
-    public function __construct(Request $request, Response $response)
-    {
-        // Determine internal name from class name.
-        if (! $this->name) {
-            $namespace = explode('\\', get_class($this));
-            $this->name = strtolower(substr(array_pop($namespace), 0, -10));
-        }
-
-        $this->request  = $request;
-        $this->response = $response;
-    }
-
-    /**
      * Returns a listing of the resource.
      *
      * @return Illuminate\Http\Response
