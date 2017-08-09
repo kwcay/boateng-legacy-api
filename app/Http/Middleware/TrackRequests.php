@@ -45,7 +45,7 @@ class TrackRequests
         $params     = [];
         $clientId   = 0;
         $scopes     = null;
-        $userId     = (int) $request->user() ? $request->user()->uniqueId : 0;
+        $userId     = (int) ($request->user() ? $request->user()->uniqueId : 0);
 
         // Try to retrieve route information
         if ($request->route()) {
