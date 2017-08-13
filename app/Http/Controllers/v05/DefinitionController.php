@@ -367,7 +367,7 @@ class DefinitionController extends BaseController
                 $existing[$data->language] = $data;
             }
 
-            // Translations to remove
+            // If an existing translation is about to be overriden, remove it.
             if ($translationsToRemove = array_intersect_key($existing, $new)) {
                 foreach ($translationsToRemove as $translation) {
                     // TODO: only remove if new translation is different.
@@ -375,10 +375,8 @@ class DefinitionController extends BaseController
                 }
             }
 
-            // Translations to add
-            if ($translationsToAdd = array_diff_key($new, $existing)) {
-                $definition->translations()->saveMany($translationsToAdd);
-            }
+            // Add all new translations
+            $definition->translations()->saveMany($new);
         }
 
         // TODO: Update tags
