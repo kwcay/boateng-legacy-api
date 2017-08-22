@@ -333,7 +333,7 @@ abstract class Controller extends BaseController
     {
         $className = $this->getModelClassName();
 
-        return $this->request->all(array_flip((new $className)->validationRules));
+        return $this->request->only(array_flip((new $className)->validationRules));
     }
 
     protected function error($message, $statusCode)
