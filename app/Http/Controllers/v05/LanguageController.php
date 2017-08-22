@@ -85,7 +85,7 @@ class LanguageController extends BaseController
     {
         return $this->save(
             new Language,
-            $this->request->only(['code', 'parent_code', 'name', 'alt_names'])
+            $this->request->all(['code', 'parent_code', 'name', 'alt_names'])
         );
     }
 
@@ -104,7 +104,7 @@ class LanguageController extends BaseController
 
         return $this->save(
             $lang,
-            $this->request->only(['parent_code', 'name', 'alt_names'])
+            $this->request->all(['parent_code', 'name', 'alt_names'])
         );
     }
 
