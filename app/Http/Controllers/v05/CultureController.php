@@ -24,7 +24,7 @@ class CultureController extends BaseController
     public function store()
     {
         // Unobfuscate language ID.
-        if ($this->request->filled('language_id')) {
+        if ($this->request->has('language_id')) {
             $encodedId = $this->request->input('language_id');
             $this->request->merge(['language_id' => Language::decodeId($encodedId)]);
         }
