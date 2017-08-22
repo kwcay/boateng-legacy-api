@@ -38,8 +38,8 @@
 
 @story('deploy')
 
-    unit-tests
     check-prod
+    unit-tests
     git-clone
     setup-app
     composer-install

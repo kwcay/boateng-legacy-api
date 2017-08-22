@@ -35,7 +35,8 @@ Route::get('languages/search/{query}',  'LanguageController@search');
 Route::get('languages/weekly',          'LanguageController@getWeekly');
 Route::resource('languages',            'LanguageController', ['only' => ['index', 'show']]);
 Route::post('languages',                'LanguageController@store')->middleware('write');
-Route::patch('languages/{language}',      'LanguageController@update')->middleware('write');
+Route::put('languages/{language}',      'LanguageController@update')->middleware('write');
+Route::patch('languages/{language}',    'LanguageController@update')->middleware('write');
 Route::delete('languages/{language}',   'LanguageController@delete')->middleware('write');
 Route::options('languages/{language?}', 'ApiController@options')->middleware('write');
 

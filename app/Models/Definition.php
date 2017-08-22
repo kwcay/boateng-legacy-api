@@ -269,6 +269,8 @@ class Definition extends Model
 
     /**
      * The Markdown parser.
+     *
+     * @deprecated
      */
     protected $markdown;
 
@@ -424,11 +426,12 @@ class Definition extends Model
     /**
      * Gets the valid definition types.
      *
+     * @deprecated
      * @return array
      */
     public static function types()
     {
-        return (new static)->types;
+        return self::TYPES;
     }
 
     /**
@@ -916,7 +919,7 @@ class Definition extends Model
      */
     public function getTypeAttribute($type = 0)
     {
-        return Arr::get($this->types, $type, $this->types[static::TYPE_WORD]);
+        return array_get($this->types, $type, $this->types[static::TYPE_WORD]);
     }
 
     /**
