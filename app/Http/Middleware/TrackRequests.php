@@ -93,7 +93,7 @@ class TrackRequests
             'client-id'     => $clientId,
             'client-name'   => $clientName,
             'oauth-scopes'  => $scopes,
-            'time'          => microtime(true) - $this->startTime,
+            'response-time' => microtime(true) - $this->startTime,
         ]);
 
         return $response;
