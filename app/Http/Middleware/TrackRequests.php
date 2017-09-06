@@ -20,12 +20,18 @@ class TrackRequests
     private $server;
 
     /**
+     * @var int
+     */
+    private $startTime;
+
+    /**
      *
      */
     public function __construct(Tracker $tracker, OAuthServer $server)
     {
-        $this->tracker  = $tracker;
-        $this->server   = $server;
+        $this->tracker      = $tracker;
+        $this->server       = $server;
+        $this->startTime    = microtime(true);
     }
 
     /**
@@ -41,18 +47,22 @@ class TrackRequests
 
         // Gather defaults to track every request
         $version    = substr($request->path(), 0, strpos($request->path(), '/'));
-        $endpoint   = '';
-        $params     = [];
+        $endpoint   = substr($request->path(), strpos($request->path(), '/'));
+        $params     = $request->toArray();
         $clientId   = 0;
+        $clientName = '';
         $scopes     = null;
         $userId     = (int) ($request->user() ? $request->user()->uniqueId : 0);
+        $fingerprint    = null;
 
         // Try to retrieve route information
+        // TODO: is it necessary to use the $request for most of these params?
         if ($request->route()) {
             $version    = $request->route()->getPrefix();
-            $params     = $request->route()->parameters();
+            $params     += $request->route()->parameters();
             $endpoint   = $request->route()->uri();
             $endpoint   = rtrim(str_replace($version, '', substr($endpoint, 0, strpos($endpoint, '{'))), '/');
+            $fingerprint    = $request->fingerprint();
         }
 
         // Try to retrieve OAuth client information
@@ -64,6 +74,10 @@ class TrackRequests
 
             $scopes     = $validatedRequest->getAttribute('oauth_scopes');
             $clientId   = app('Obfuscator')->encode((int) $validatedRequest->getAttribute('oauth_client_id'));
+
+            if ($client = \Laravel\Passport\Client::find($validatedRequest->getAttribute('oauth_client_id'))) {
+                $clientName = $client->name.' ('.$clientId.')';
+            }
         } catch (\Exception $e) {}
 
         $this->tracker->addEvent('request', [
@@ -71,13 +85,15 @@ class TrackRequests
             'host'          => $request->root(),
             'version'       => $version,
             'endpoint'      => $endpoint,
-            'input'         => array_merge($params, $request->toArray()),
-            'fingerprint'   => $request->fingerprint(),
+            'input'         => $params,
+            'fingerprint'   => $fingerprint,
             'ip'            => $request->ip(),
             'user-agent'    => $request->headers->get('user-agent'),
             'user-id'       => $userId,
             'client-id'     => $clientId,
+            'client-name'   => $clientName,
             'oauth-scopes'  => $scopes,
+            'time'          => microtime(true) - $this->startTime,
         ]);
 
         return $response;
