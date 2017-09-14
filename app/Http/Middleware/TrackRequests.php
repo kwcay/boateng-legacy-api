@@ -29,9 +29,9 @@ class TrackRequests
      */
     public function __construct(Tracker $tracker, OAuthServer $server)
     {
-        $this->tracker      = $tracker;
-        $this->server       = $server;
-        $this->startTime    = microtime(true);
+        $this->tracker   = $tracker;
+        $this->server    = $server;
+        $this->startTime = microtime(true);
     }
 
     /**
@@ -82,8 +82,8 @@ class TrackRequests
 
         $this->tracker->addEvent('request', [
             'method'        => $request->method(),
-            'host'          => $request->root(),
-            'version'       => $version,
+            'api-host'      => $request->root(),
+            'api-version'   => $version,
             'endpoint'      => $endpoint,
             'input'         => $params,
             'fingerprint'   => $fingerprint,
@@ -94,6 +94,7 @@ class TrackRequests
             'client-name'   => $clientName,
             'oauth-scopes'  => $scopes,
             'response-time' => microtime(true) - $this->startTime,
+            'response-code' => $response->getStatusCode()
         ]);
 
         return $response;
