@@ -133,11 +133,16 @@ abstract class Controller extends BaseController
     /**
      * Performs a search based on the given query.
      *
+     * @todo   Deprecate query in path.
      * @param  string $query
      * @return Illuminate\Http\Response
      */
-    public function search($query)
+    public function search($query = null)
     {
+        if (! $query = trim($this->request->get('q', $query))) {
+            return response('Invalid query.', 400);
+        }
+
         $model = $this->getModel();
 
         // Retrieve search parameters.

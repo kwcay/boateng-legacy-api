@@ -16,8 +16,14 @@ use App\Http\Controllers\v0_5\Controller as BaseController;
 
 class LanguageController extends BaseController
 {
+    /**
+     * @var int
+     */
     protected $defaultQueryLimit = 20;
 
+    /**
+     * @var array
+     */
     protected $supportedOrderColumns = [
         'id'        => 'ID',
         'code'      => 'ISO 639-3 code',
@@ -25,9 +31,35 @@ class LanguageController extends BaseController
         'createdAt' => 'Created date',
     ];
 
+    /**
+     * @var string
+     */
     protected $defaultOrderColumn = 'code';
 
+    /**
+     * @var string
+     */
     protected $defaultOrderDirection = 'asc';
+
+    /**
+     * Performs a search based on the given query.
+     *
+     * @todo   Deprecate query in path.
+     * @param  string $query
+     * @return Illuminate\Http\Response
+     */
+    public function search($query = null)
+    {
+        $response = parent::search($query);
+
+        if (! is_array($response)) {
+            return $response;
+        } elseif ($this->request->get('format') === 'compact') {
+            return array_pluck($response['results'], 'name', 'code');
+        }
+
+        return $response;
+    }
 
     /**
      * Retrieves a language resource.
