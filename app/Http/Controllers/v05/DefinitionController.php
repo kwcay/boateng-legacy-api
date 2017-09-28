@@ -59,6 +59,37 @@ class DefinitionController extends BaseController
     }
 
     /**
+     * Performs a search based on the given query.
+     *
+     * @todo   Deprecate query in path.
+     * @param  string $query
+     * @return Illuminate\Http\Response
+     */
+    public function search($query = null)
+    {
+        $response = parent::search($query);
+
+        if (! is_array($response)) {
+            return $response;
+        } elseif ($this->request->get('format') === 'compact') {
+            $compact = [];
+
+            foreach ($response['results'] as $result) {
+                $def = array_only($result->toArray(), ['type', 'subType']);
+                $def['titles']          = array_pluck($result['titles'], 'title');
+                $def['translations']    = array_pluck($result['translations'], 'practical', 'language');
+                $def['languages']       = array_pluck($result['languages'], 'name', 'code');
+
+                $compact[] = $def;
+            }
+
+            return $compact;
+        }
+
+        return $response;
+    }
+
+    /**
      * Returns a definition resource.
      *
      * @todo   Move to parent class.
