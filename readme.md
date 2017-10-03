@@ -1,5 +1,20 @@
 # Dora Boateng API
 
+# Local setup
+
+## Software
+
+- Git, PHP, Composer
+- MCrypt, MB String, ext-dom (php-xml), CUrl
+
+## OAuth
+
+`php artisan passport:install`
+
+## Seeding
+
+- Todo
+
 # Deploying
 
 ## Staging
