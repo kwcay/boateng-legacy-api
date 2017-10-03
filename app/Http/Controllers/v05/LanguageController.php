@@ -46,7 +46,7 @@ class LanguageController extends BaseController
      *
      * @todo   Deprecate query in path.
      * @param  string $query
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function search($query = null)
     {
@@ -101,7 +101,7 @@ class LanguageController extends BaseController
         $weekly     = Language::weekly($embedStr);
 
         if (! $weekly) {
-            return response('No Results Found.');
+            return response('No Results Found.', 404);
         }
 
         // Append extra attributes.
