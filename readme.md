@@ -4,25 +4,27 @@
 
 ## Software
 
-- Git, PHP, Composer
-- MCrypt, MB String, ext-dom (php-xml), CUrl
+- Git
+- PHP, MCrypt, MB String, ext-dom (php-xml), CUrl
+- Composer
 
-## OAuth
+## Settign up OAuth
 
 `php artisan passport:install`
 
-## Seeding
+## Seeding the database
 
 - Todo
 
 # Deploying
 
 ## Staging
+
 `git push heroku`
 
-## Production
+## Production (with Envoy)
 
-Make sure Vagrant can access the production server.
+`envoy run deploy`
 
 Sample `config` file:
 ```
@@ -31,8 +33,6 @@ Host production-server
     User boateng-user
     IdentityFile ~/.ssh/id_production
 ```
-
-Run `envoy run deploy` from Vagrant.
 
 # Maintenance
 
