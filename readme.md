@@ -28,10 +28,10 @@
 
 Sample `config` file:
 ```
-Host production-server
-    HostName 45.55.60.14
-    User boateng-user
-    IdentityFile ~/.ssh/id_production
+Host dora-boateng
+    User boateng
+    HostName IP_ADDRESS
+    IdentityFile ~/.ssh/id_rsa
 ```
 
 # Maintenance
