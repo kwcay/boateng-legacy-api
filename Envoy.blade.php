@@ -229,7 +229,7 @@
 @story('test')
 
     test-local
-    test-prod
+    # test-prod
 
 @endstory
 
