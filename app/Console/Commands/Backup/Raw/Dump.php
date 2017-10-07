@@ -107,7 +107,7 @@ class Dump extends BaseCommand
     /**
      * @return bool
      */
-    protected function shouldRun()
+    protected function shouldRun() : bool
     {
         return (bool) config('app.backups.sql-dump');
     }

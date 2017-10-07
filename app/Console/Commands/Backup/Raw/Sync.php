@@ -30,6 +30,10 @@ class Sync extends BaseCommand
      */
     public function handle()
     {
+        if (app()->environment() !== 'local') {
+            return $this->error('Backup sync script can only be run locally.');
+        }
+
         // TODO: get base path from storage driver.
         $host       = config('app.automation.production-server');
         $backupsDir = config('app.automation.live-directory').'/storage/backups/'.static::PATH;

@@ -1,16 +1,19 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2017, all rights reserved.
- */
+
 namespace App\Console\Commands\Backup\Raw;
 
-use Storage;
-use Illuminate\Console\Command;
 use App\Console\Traits\FileTrait;
+use App\Console\Commands\Contract;
+use Illuminate\Support\Facades\Storage;
 
-class BaseCommand extends Command
+class BaseCommand extends Contract
 {
     use FileTrait;
+
+    /**
+     * @var \Illuminate\Contracts\Filesystem\Filesystem
+     */
+    protected $store;
 
     /**
      * @const string
@@ -27,7 +30,7 @@ class BaseCommand extends Command
     /**
      * @return bool
      */
-    protected function shouldRun()
+    protected function shouldRun() : bool
     {
         return (bool) config('app.backups.sql-dump');
     }
