@@ -1,17 +1,12 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2016, all rights reserved.
- *
- * @version 0.5
- * @brief   Handles tag-related API requests.
- */
-namespace App\Http\Controllers\v0_5;
+
+namespace App\Http\Controllers\v05;
 
 use Request;
 use App\Models\Tag;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\v0_5\Controller as BaseController;
+use App\Http\Controllers\v05\Controller as BaseController;
 
 class TagController extends BaseController
 {

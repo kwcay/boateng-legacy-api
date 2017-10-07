@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\v0_5;
+namespace App\Http\Controllers\v05;
 
 use App\Models\Language;
 use App\Models\Definition;

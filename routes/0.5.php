@@ -1,7 +1,4 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2017, all rights reserved.
- */
 
 // Info
 Route::get('/', 'ApiController@version');

@@ -1,17 +1,12 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2017, all rights reserved.
- *
- * @version 0.5
- * @brief   Handles user-related API requests.
- */
+
 namespace App\Http\Controllers\v0_5;
 
 use Auth;
 use Request;
 use App\Models\User;
 use App\Http\Requests;
-use App\Http\Controllers\v0_5\Controller;
+use App\Http\Controllers\v05\Controller;
 
 class UserController extends Controller
 {

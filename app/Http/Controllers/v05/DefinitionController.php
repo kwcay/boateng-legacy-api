@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\v0_5;
+namespace App\Http\Controllers\v05;
 
 use Lang;
 use Request;
@@ -14,7 +14,7 @@ use App\Models\DefinitionTitle;
 use Illuminate\Validation\Rule;
 use App\Models\Definitions\Word;
 use App\Models\Definitions\Expression;
-use App\Http\Controllers\v0_5\Controller as BaseController;
+use App\Http\Controllers\v05\Controller as BaseController;
 
 class DefinitionController extends BaseController
 {

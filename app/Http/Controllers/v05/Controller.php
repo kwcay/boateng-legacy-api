@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\v0_5;
+namespace App\Http\Controllers\v05;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Controllers\Controller as BaseController;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\v0_5;
+namespace App\Http\Controllers\v05;
 
 use App\Models\Culture;
 use App\Models\Language;
-use App\Http\Controllers\v0_5\Controller as BaseController;
+use App\Http\Controllers\v05\Controller as BaseController;
 
 class CultureController extends BaseController
 {

@@ -1,7 +1,5 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2017, all rights reserved.
- */
+
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Route;
@@ -48,7 +46,7 @@ class RouteServiceProvider extends ServiceProvider
         // API v0.5
         Route::prefix('0.5')
             ->middleware('read')
-            ->namespace('App\Http\Controllers\v0_5')
+            ->namespace('App\Http\Controllers\v05')
             ->group(base_path('routes/0.5.php'));
     }
 }
