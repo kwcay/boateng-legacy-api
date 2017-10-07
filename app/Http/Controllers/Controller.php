@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Tracker;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -15,7 +14,7 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
-     * @var Illuminate\Http\Request
+     * @var \Illuminate\Http\Request
      */
     protected $request;
 
@@ -25,9 +24,8 @@ class Controller extends BaseController
     private $tracker;
 
     /**
-     * @param  Illuminate\Http\Request  $request
-     * @param  App\Tracker              $tracker
-     * @return void
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Tracker              $tracker
      */
     public function __construct(Request $request, Tracker $tracker)
     {

@@ -1,17 +1,9 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2016, all rights reserved.
- *
- * @version 0.4
- * @brief   Handles culture-related API requests.
- */
+
 namespace App\Http\Controllers\v0_5;
 
-use App\Http\Requests;
 use App\Models\Culture;
 use App\Models\Language;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use App\Http\Controllers\v0_5\Controller as BaseController;
 
 class CultureController extends BaseController
@@ -19,7 +11,7 @@ class CultureController extends BaseController
     /**
      * Stores a newly created resource in storage.
      *
-     * @return Response
+     * @return Culture
      */
     public function store()
     {
@@ -30,10 +22,11 @@ class CultureController extends BaseController
         }
 
         // Validate incoming data.
-        $this->validate($this->request, (new Culture)->validationRules);
+        $model = new Culture;
+        $this->validate($this->request, $model->validationRules);
 
         // Create culture record.
-        $culture = Culture::create($this->getAttributesFromRequest());
+        $culture = $model->create($this->getAttributesFromRequest());
 
         return $culture;
     }

@@ -286,7 +286,7 @@ class Language extends Model
      * Retrieves the language of the week.
      *
      * @param string $embed
-     * @return App\Models\Language
+     * @return \App\Models\Language
      */
     public static function weekly($embed = '')
     {

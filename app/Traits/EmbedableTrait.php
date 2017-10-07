@@ -26,7 +26,7 @@ trait EmbedableTrait
      * @todo    Find a way to include this in "scopeEmbed"
      *
      * @param   string|array  $embed
-     * @return  Illuminate\Database\Eloquent\Model
+     * @return  \Illuminate\Database\Eloquent\Model
      */
     public function applyEmbedableAttributes($embed)
     {

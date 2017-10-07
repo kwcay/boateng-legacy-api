@@ -1,14 +1,10 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2017, all rights reserved.
- */
+
 namespace App\Http\Controllers\v0_5;
 
-use Auth;
-use Session;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Controllers\Controller as BaseController;
+use Illuminate\Support\Collection;
 
 abstract class Controller extends BaseController
 {
@@ -21,22 +17,30 @@ abstract class Controller extends BaseController
      */
     protected $name;
 
-
+    /**
+     * @var int
+     */
     protected $defaultQueryLimit = 20;
 
-
+    /**
+     * @var array
+     */
     protected $supportedOrderColumns = ['id' => 'ID'];
 
-
+    /**
+     * @var string
+     */
     protected $defaultOrderColumn = 'id';
 
-
+    /**
+     * @var string
+     */
     protected $defaultOrderDirection = 'desc';
 
     /**
      * Returns a listing of the resource.
      *
-     * @return Illuminate\Http\Response
+     * @return array
      */
     public function index()
     {
@@ -47,9 +51,9 @@ abstract class Controller extends BaseController
       * Returns a listing of the resource using the provided query builder.
       *
       * @todo   Restrict access based on roles.
-      * @param  Illuminate\Database\Eloquent\Model|Illuminate\Database\Query\Builder $builder
+      * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder $builder
       * @param  array $queryParams
-      * @return Illuminate\Http\Response
+      * @return array
       */
     public function indexFromBuilder($builder, array $queryParams = [])
     {
@@ -135,7 +139,7 @@ abstract class Controller extends BaseController
      *
      * @todo   Deprecate query in path.
      * @param  string $query
-     * @return Illuminate\Http\Response
+     * @return array|\Illuminate\Http\Response
      */
     public function search($query = null)
     {
@@ -161,7 +165,7 @@ abstract class Controller extends BaseController
     /**
      * Counts the # of records.
      *
-     * @return Illuminate\Http\Response
+     * @return int
      */
     public function count()
     {
@@ -173,7 +177,7 @@ abstract class Controller extends BaseController
      *
      * @todo   Restrict access based on roles.
      * @param  int|string $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public function show($id)
     {
@@ -187,7 +191,7 @@ abstract class Controller extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function store()
     {
@@ -198,7 +202,7 @@ abstract class Controller extends BaseController
      * Updates the specified resource in storage.
      *
      * @param  int|string $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function update($id)
     {
@@ -210,7 +214,7 @@ abstract class Controller extends BaseController
      *
      * @todo   Restrict access based on roles.
      * @param  int $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
@@ -222,7 +226,7 @@ abstract class Controller extends BaseController
      *
      * @todo   Restrict access based on roles.
      * @param  int|string $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function restore($id)
     {
@@ -245,7 +249,7 @@ abstract class Controller extends BaseController
      *
      * @todo   Restrict access based on roles.
      * @param  int $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function forceDestroy($id)
     {
@@ -255,9 +259,9 @@ abstract class Controller extends BaseController
     /**
      * Retrieves the relations and attributes that may be appended to a model.
      *
-     * @param array|string $embed   The properties to be appended to a model.
-     * @param array $appendable     Those properties which aren't database relations.
-     * @return array
+     * @param  array|string $embed  The properties to be appended to a model.
+     * @param  array $appendable    Those properties which aren't database relations.
+     * @return Collection[]
      */
     protected function getEmbedArray($embed = null, array $appendable = [])
     {
@@ -294,7 +298,6 @@ abstract class Controller extends BaseController
      *
      * @param mixed $model      Model to append attributes to.
      * @param array $attributes Attributes to append to the model.
-     * @return void
      */
     protected function applyEmbedableAttributes($model, array $attributes = null)
     {
@@ -332,7 +335,7 @@ abstract class Controller extends BaseController
     /**
      * Retrieves the attributes to be updated.
      *
-     * @return Illuminate\Support\Collection
+     * @return array
      */
     protected function getAttributesFromRequest()
     {
@@ -341,6 +344,10 @@ abstract class Controller extends BaseController
         return $this->request->only(array_flip((new $className)->validationRules));
     }
 
+    /**
+     * @param $message
+     * @param $statusCode
+     */
     protected function error($message, $statusCode)
     {
         // TODO: use $this->response or don't even inject it in the constructor
@@ -361,10 +368,11 @@ abstract class Controller extends BaseController
      * Retrieves an instance of a model by ID.
      *
      * @param  int $id
-     * @return Illuminate\Database\Eloquent\Model|null
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
     protected function getModelInstance($id)
     {
+        /* @var \Illuminate\Database\Eloquent\Model $className */
         $className = $this->getModelClassName();
 
         return $className::find($id);
@@ -373,7 +381,7 @@ abstract class Controller extends BaseController
     /**
      * Creates a new instance of the model associated with this controller.
      *
-     * @return Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Database\Eloquent\Model
      */
     protected function getModel()
     {

@@ -1,16 +1,7 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2016, all rights reserved.
- *
- * @version 0.5
- * @brief   Handles language-related API requests.
- */
+
 namespace App\Http\Controllers\v0_5;
 
-use Lang;
-use Session;
-use Request;
-use Redirect;
 use App\Models\Language;
 use App\Http\Controllers\v0_5\Controller as BaseController;
 
@@ -46,7 +37,7 @@ class LanguageController extends BaseController
      *
      * @todo   Deprecate query in path.
      * @param  string $query
-     * @return \Illuminate\Http\Response
+     * @return array|\Illuminate\Http\Response
      */
     public function search($query = null)
     {
@@ -65,13 +56,13 @@ class LanguageController extends BaseController
      * Retrieves a language resource.
      *
      * @param  string $id    Either the ISO 639-3 language code or language ID.
-     * @return \Illuminate\Http\Response
+     * @return Language|array|\Illuminate\Http\Response
      */
     public function show($id)
     {
         // Retrieve list of relations and attributes to append to results.
         $embed = $this->getEmbedArray(
-            Request::get('embed'),
+            $this->request->get('embed'),
             Language::$appendable
         );
 
@@ -93,19 +84,19 @@ class LanguageController extends BaseController
     /**
      * Language of the week.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Http\Response
      */
     public function getWeekly()
     {
-        $embedStr   = $this->request->get('embed', '');
-        $weekly     = Language::weekly($embedStr);
+        $embed  = $this->request->get('embed', '');
+        $weekly = Language::weekly($embed);
 
         if (! $weekly) {
             return response('No Results Found.', 404);
         }
 
         // Append extra attributes.
-        return $weekly->applyEmbedableAttributes($embedStr);
+        return $weekly->applyEmbedableAttributes($embed);
     }
 
     /**
@@ -148,15 +139,15 @@ class LanguageController extends BaseController
      */
     public function destroy($id)
     {
-        abort(501, 'Not Implemented.');
+        return response('Not Implemented.', 501);
     }
 
     /**
      * Shortcut to create a new language or save an existing one.
      *
-     * @param  \App\Models\Language  $lang
-     * @param  array  $data
-     * @return \Illuminate\Http\Response
+     * @param  Language $lang
+     * @param  array    $data
+     * @return Language|\Illuminate\Http\Response
      */
     protected function save($lang, $data)
     {
@@ -182,7 +173,7 @@ class LanguageController extends BaseController
      *
      * @param string $id    Either the ISO 639-3 language code or language ID.
      * @param array $embed  Database relations to pre-load.
-     * @return \App\Models\Language|null
+     * @return Language|null
      */
     private function getLanguage($id, array $embed = [])
     {

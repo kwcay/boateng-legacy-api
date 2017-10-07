@@ -399,10 +399,10 @@ class Definition extends Model
     /**
      * Creates an instance of a definition type.
      *
-     * @param int $type
-     * @param array $attributes
-     * @param bool $exists
-     * @return App\Models\Definition|null
+     * @param  int $type
+     * @param  array $attributes
+     * @param  bool $exists
+     * @return \App\Models\Definition
      */
     public static function getInstance($type, array $attributes = [], $exists = false)
     {

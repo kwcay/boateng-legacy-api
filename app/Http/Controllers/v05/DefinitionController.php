@@ -1,13 +1,7 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2017, all rights reserved.
- *
- * @version 0.5
- * @brief   Handles definition-related API requests.
- */
+
 namespace App\Http\Controllers\v0_5;
 
-use Auth;
 use Lang;
 use Request;
 use Validator;
@@ -19,7 +13,6 @@ use App\Models\Translation;
 use App\Models\DefinitionTitle;
 use Illuminate\Validation\Rule;
 use App\Models\Definitions\Word;
-use App\Http\Controllers\Controller;
 use App\Models\Definitions\Expression;
 use App\Http\Controllers\v0_5\Controller as BaseController;
 
@@ -41,7 +34,7 @@ class DefinitionController extends BaseController
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return array|\Illuminate\Http\Response
      */
     public function index()
     {
@@ -63,7 +56,7 @@ class DefinitionController extends BaseController
      *
      * @todo   Deprecate query in path.
      * @param  string $query
-     * @return Illuminate\Http\Response
+     * @return array|\Illuminate\Http\Response
      */
     public function search($query = null)
     {
@@ -94,7 +87,7 @@ class DefinitionController extends BaseController
      *
      * @todo   Move to parent class.
      * @param  string  $id  Unique ID of definition.
-     * @return \Illuminate\Http\Response
+     * @return Definition|\Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -117,7 +110,7 @@ class DefinitionController extends BaseController
      * Returns a random definition
      *
      * @param  string $langCode
-     * @return \Illuminate\Http\Response
+     * @return Definition|\Illuminate\Http\Response
      */
     public function random($langCode = null)
     {
@@ -138,9 +131,8 @@ class DefinitionController extends BaseController
      *
      * @todo  Review
      *
-     * @param string $definitionType
      * @param string $title
-     * @return \Illuminate\Http\Response
+     * @return array|\Illuminate\Http\Response
      */
     public function findByTitle($title)
     {
@@ -179,9 +171,8 @@ class DefinitionController extends BaseController
     /**
      * Returns the definition of the day.
      *
-     * @param string $definitionType
-     * @param string $title
-     * @return \Illuminate\Http\Response
+     * @param  string $type
+     * @return Definition|\Illuminate\Http\Response
      */
     public function getDaily($type = null)
     {
@@ -219,7 +210,7 @@ class DefinitionController extends BaseController
     /**
      * Stores a new definition record.
      *
-     * @return \Illuminate\Http\Response
+     * @return Definition|\Illuminate\Http\Response
      */
     public function store()
     {
@@ -253,7 +244,7 @@ class DefinitionController extends BaseController
      * Updates a definition record and its relations.
      *
      * @param  int  $id  Encrypted ID
-     * @return \Illuminate\Http\Response
+     * @return Definition|\Illuminate\Http\Response
      */
     public function update($id)
     {
@@ -268,9 +259,8 @@ class DefinitionController extends BaseController
     /**
      * Shortcut to save a definition model.
      *
-     * @param  App\Models\Definition $definition
-     * @param  array $data
-     * @return Illuminate\Http\Response
+     * @param  Definition $definition
+     * @return Definition|\Illuminate\Http\Response
      */
     protected function save($definition)
     {

@@ -1,7 +1,5 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2017, all rights reserved.
- */
+
 namespace App\Http\Controllers\v0_5;
 
 use App\Models\Language;
@@ -13,7 +11,7 @@ use App\Http\Controllers\Controller;
 class ApiController extends Controller
 {
     /**
-     * Returns the version number of the API.
+     * @return string
      */
     public function version()
     {
@@ -21,7 +19,8 @@ class ApiController extends Controller
     }
 
     /**
-     * @param string $query
+     * @param  string $query
+     * @return array
      */
     public function generalSearch($query)
     {
@@ -58,6 +57,8 @@ class ApiController extends Controller
 
     /**
      * Returns the latest resource IDs and types
+     *
+     * @return Collection
      */
     public function latest()
     {
@@ -79,7 +80,7 @@ class ApiController extends Controller
     /**
      * List of supported locales
      *
-     * @return Illuminate\Http\Response
+     * @return array
      */
     public function locales()
     {
