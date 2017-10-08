@@ -16,7 +16,7 @@ class UnobfuscateClientId
      */
     public function handle($request, Closure $next)
     {
-        if ($request->has('client_id')) {
+        if ($request->has('client_id') && is_numeric($request->get('client_id'))) {
             $request->request->set(
                 'client_id',
                 app('Obfuscator')->decode($request->get('client_id'))
