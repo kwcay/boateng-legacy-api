@@ -10,12 +10,12 @@ use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 class TrackRequests
 {
     /**
-     * @var App\Tracker
+     * @var \App\Tracker
      */
     private $tracker;
 
     /**
-     * @var League\OAuth2\Server\ResourceServer
+     * @var \League\OAuth2\Server\ResourceServer
      */
     private $server;
 
@@ -37,9 +37,9 @@ class TrackRequests
     /**
      * Track every incoming request.
      *
-     * @param  Illuminate\Http\Request  $request
-     * @param  Closure                  $next
-     * @return Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure                  $next
+     * @return \Illuminate\Http\Response
      */
     public function handle($request, Closure $next)
     {
@@ -79,6 +79,11 @@ class TrackRequests
                 $clientName = $client->name.' ('.$clientId.')';
             }
         } catch (\Exception $e) {}
+
+        // TODO: tracking temporarily limited to invalid requests
+        if ($clientId) {
+            return $response;
+        }
 
         $this->tracker->addEvent('request', [
             'method'        => $request->method(),
