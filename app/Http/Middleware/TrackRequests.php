@@ -105,6 +105,10 @@ class TrackRequests
         return $response;
     }
 
+    /**
+     * @param $request
+     * @param $response
+     */
     public function terminate($request, $response)
     {
         // Store the session data
