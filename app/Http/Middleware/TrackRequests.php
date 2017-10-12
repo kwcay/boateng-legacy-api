@@ -80,11 +80,6 @@ class TrackRequests
             }
         } catch (\Exception $e) {}
 
-        // TODO: tracking temporarily limited to invalid requests
-        if ($clientId) {
-            return $response;
-        }
-
         $this->tracker->addEvent('request', [
             'method'        => $request->method(),
             'api-host'      => $request->root(),
