@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 // Info
 Route::get('/', 'ApiController@version');
 Route::get('/locales', 'ApiController@locales');
