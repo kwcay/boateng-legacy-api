@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v05;
 
 use App\Models\Language;
 use App\Http\Controllers\v05\Controller as BaseController;
+use Illuminate\Validation\Rule;
 
 class LanguageController extends BaseController
 {
@@ -152,7 +153,18 @@ class LanguageController extends BaseController
     protected function save($lang, $data)
     {
         // Validate input data
-        $this->validate($this->request, (new Language)->validationRules);
+        $this->validate($this->request, [
+            'code' => [
+                'sometimes',
+                'required',
+                'min:3',
+                'max:7',
+                Rule::unique('languages')->ignore($lang->id)
+            ],
+            'parent_code' => 'nullable|min:3|max:7',
+            'name' => 'required|min:2',
+            'alt_names' => 'nullable|min:2',
+        ]);
 
         // Update language details.
         $lang->fill($data);
