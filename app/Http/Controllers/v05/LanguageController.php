@@ -152,10 +152,7 @@ class LanguageController extends BaseController
     protected function save($lang, $data)
     {
         // Validate input data
-        $validator = Language::validate($data);
-        if ($validator->fails()) {
-            $this->throwValidationException($this->request, $validator);
-        }
+        $this->validate($this->request, (new Language)->validationRules);
 
         // Update language details.
         $lang->fill($data);
