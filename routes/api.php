@@ -1,6 +1,5 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2016, all rights reserved.
- */
+
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'GeneralController@latest');
