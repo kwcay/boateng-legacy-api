@@ -62,5 +62,5 @@ Route::options('tags/{id?}',            'ApiController@options')->middleware('wr
 Route::get('user',                      'UserController@current')->middleware('write');
 
 // General lookup
-Route::get('search/{query}',            'ApiController@generalSearch');
+Route::get('search/{query?}',           'ApiController@generalSearch');
 Route::get('latest',                    'ApiController@latest');
