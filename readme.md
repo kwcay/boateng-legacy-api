@@ -14,7 +14,9 @@
 
 ## Seeding the database
 
-    php artisan backup:sync
+To restore a raw backup file:
+
+    php artisan backup:raw:restore
 
 # Deploying
 

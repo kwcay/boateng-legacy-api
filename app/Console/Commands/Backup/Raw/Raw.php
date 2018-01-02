@@ -6,7 +6,7 @@ use App\Console\Traits\FileTrait;
 use App\Console\Commands\Contract;
 use Illuminate\Support\Facades\Storage;
 
-class BaseCommand extends Contract
+abstract class Raw extends Contract
 {
     use FileTrait;
 

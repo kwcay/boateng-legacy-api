@@ -7,7 +7,7 @@ namespace App\Console\Commands\Backup\Raw;
 use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class Dump extends BaseCommand
+class Dump extends Raw
 {
     /**
      * The number of backup files to keep.
@@ -34,12 +34,15 @@ class Dump extends BaseCommand
     /**
      * Execute the console command.
      *
+     * @todo   Ideally, the users and oauth_* tables should be backed up separately, and maybe encrypted.
      * @return mixed
      */
     public function handle()
     {
         if (! $this->shouldRun() && ! $this->option('force')) {
-            return $this->comment('SQL dumps disabled, exiting.');
+            $this->comment('SQL dumps disabled, exiting.');
+
+            return 0;
         }
 
         $host       = config('database.connections.mysql.host');
@@ -102,6 +105,8 @@ class Dump extends BaseCommand
         }
 
         $this->info('Done.');
+
+        return 0;
     }
 
     /**
