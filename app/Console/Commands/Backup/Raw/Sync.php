@@ -40,7 +40,7 @@ class Sync extends BaseCommand
 
         $this->info('Connecting to remote...');
 
-        $process = new Process("ssh {$host} ls {$backupsDir} | tail -n1");
+        $process = new Process("ssh {$host} ls -rt {$backupsDir} | tail -n1");
 
         if ($process->run() !== 0) {
             throw new ProcessFailedException($process);
@@ -61,8 +61,12 @@ class Sync extends BaseCommand
 
         $this->info('Reading '.$backupFile.'...');
 
-        if (! $data = $this->store->get(static::PATH.'/'.$backupFile)) {
-            return $this->error('Could not read backup file.');
+        try {
+            if (! $data = $this->store->get(static::PATH.'/'.$backupFile)) {
+                return $this->error('Could not read backup file.');
+            }
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage());
         }
 
         $this->store->put(static::PATH.'/raw-dump.sql', gzuncompress($data));

@@ -14,7 +14,7 @@
 
 ## Seeding the database
 
-- Todo
+    php artisan backup:sync
 
 # Deploying
 
