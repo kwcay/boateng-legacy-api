@@ -23,9 +23,9 @@ class ApiController extends Controller
      * @param  string $query
      * @return array
      */
-    public function generalSearch($query = null)
+    public function generalSearch()
     {
-        $query = $this->request->get('q', $query);
+        $query = $this->request->get('q');
 
         // Retrieve search parameters (omit "offset" and "limit").
         $options = ['lang' => $this->request->get('language', '')];
